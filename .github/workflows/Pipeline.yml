@@ -6,7 +6,7 @@ on:
 
 jobs:
   MikTeX:
-    name: Build MikTeX base-image
+    name: 🛳️ Build MikTeX base-image
     runs-on: ubuntu-24.04
 
     outputs:
@@ -63,7 +63,7 @@ jobs:
             printf "%s\n" "${ANSI_BLUE}${OutputFile}${ANSI_NOCOLOR}"
             printf "%s\n" "${ANSI_BLUE}--------------------------------------------------------------------------------${ANSI_NOCOLOR}"
             while IFS='' read -r line; do
-              printf "%s\n" "  ${ANSI_CYAN}$line${ANSI_NOCOLOR}"
+              printf "  %s\n" "${ANSI_CYAN}$line${ANSI_NOCOLOR}"
             done < "${OutputFile}"
             printf "%s\n" "${ANSI_BLUE}--------------------------------------------------------------------------------${ANSI_NOCOLOR}"
           }
@@ -117,7 +117,7 @@ jobs:
         id: variables
         run: |
           tee "${GITHUB_OUTPUT}" <<EOF
-          specific_image_ns=base_image_ns="${{ needs.MikTeX.outputs.miktex_image_ns }}"
+          specific_image_ns="${{ needs.MikTeX.outputs.miktex_image_ns }}"
           specific_image_name="${{ needs.MikTeX.outputs.miktex_image_name }}"
           specific_image_tag="${{ matrix.name }}"
           specific_image=${{ needs.MikTeX.outputs.miktex_image_ns }}/${{ needs.MikTeX.outputs.miktex_image_name }}:${{ matrix.image }}
@@ -146,7 +146,7 @@ jobs:
             printf "%s\n" "${ANSI_BLUE}${OutputFile}${ANSI_NOCOLOR}"
             printf "%s\n" "${ANSI_BLUE}--------------------------------------------------------------------------------${ANSI_NOCOLOR}"
             while IFS='' read -r line; do
-              printf "%s\n" "  ${ANSI_CYAN}$line${ANSI_NOCOLOR}"
+              printf "  %s\n" "${ANSI_CYAN}$line${ANSI_NOCOLOR}"
             done < "${OutputFile}"
             printf "%s\n" "${ANSI_BLUE}--------------------------------------------------------------------------------${ANSI_NOCOLOR}"
           }
