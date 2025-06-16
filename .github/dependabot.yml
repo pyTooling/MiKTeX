@@ -8,8 +8,6 @@ updates:
       prefix: "[Dependabot]"
     labels:
       - Dependencies
-    reviewers:
-      - Paebbels
     schedule:
       interval: "weekly"
 
@@ -21,7 +19,5 @@ updates:
       prefix: "[Dependabot]"
     labels:
       - Dependencies
-    reviewers:
-      - Paebbels
     schedule:
       interval: "weekly"

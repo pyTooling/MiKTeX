@@ -1,3 +1,5 @@
+# check=skip=InvalidDefaultArgInFrom;error=true
+
 ARG IMAGE
 ARG OS_VERSION
 ARG PY_VERSION
