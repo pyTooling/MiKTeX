@@ -51,4 +51,4 @@ ENV MIKTEX_USERCONFIG=/miktex/.miktex/texmfs/config
 ENV MIKTEX_USERDATA=/miktex/.miktex/texmfs/data
 ENV MIKTEX_USERINSTALL=/miktex/.miktex/texmfs/install
 
-ENTRYPOINT /bin/bash -l
+ENTRYPOINT ["/bin/bash", "-l"]
