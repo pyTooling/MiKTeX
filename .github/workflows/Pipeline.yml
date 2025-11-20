@@ -41,7 +41,7 @@ jobs:
           EOF
 
       - name: ⏬ Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: 🐋 Building MikTeX image
         id: build
@@ -124,7 +124,7 @@ jobs:
           EOF
 
       - name: ⏬ Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: 🐋 Building MikTeX image for ${{ matrix.name }}
         id: build
