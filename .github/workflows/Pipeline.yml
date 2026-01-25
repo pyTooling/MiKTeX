@@ -18,6 +18,7 @@ jobs:
       miktex_image_name:        ${{ steps.variables.outputs.miktex_image_name }}
       miktex_image_tag:         ${{ steps.variables.outputs.miktex_image_tag }}
       miktex_image:             ${{ steps.variables.outputs.miktex_image }}
+      miktex_version:           ${{ steps.test.outputs.miktex_version }}
 
     steps:
       - name: 🖉 Variables
@@ -25,11 +26,11 @@ jobs:
         run: |
           base_image_name="python"
           base_image_os_version="13"
-          base_image_os_codename="bookworm"
+          base_image_os_codename="Bookworm"
           base_image_os_size="-slim"
           base_image_py_version="3.14"
 
-          miktex_source_repository="${base_image_os_codename}"
+          miktex_source_repository="${base_image_os_codename,,}"
 
           image_name="miktex"
           image_tag="latest"
@@ -39,7 +40,7 @@ jobs:
           base_image_os_version=${base_image_os_version}
           base_image_os_codename=${base_image_os_codename}
           base_image_py_version=${base_image_py_version}
-          base_image=${base_image_name}:${base_image_py_version}${base_image_os_size}-${base_image_os_codename}
+          base_image=${base_image_name}:${base_image_py_version}${base_image_os_size}-${base_image_os_codename,,}
           
           miktex_source_repository=${miktex_source_repository}
           
@@ -61,30 +62,26 @@ jobs:
           ANSI_BLUE=$'\x1b[34m'
           ANSI_CYAN=$'\x1b[36m'
           ANSI_DARK_GRAY=$'\x1b[90m'
+          ANSI_LIGHT_BLUE=$'\x1b[94m'
           ANSI_NOCOLOR=$'\x1b[0m'
           
           RemoveComments() {
             local OutputFile="${2:-$1}"
         
-            printf "%s\n" "Removing comments from '$1' and writing to '${OutputFile}'."
+            printf "::group::${ANSI_LIGHT_BLUE}%s${ANSI_NOCOLOR}\n" "Removing comments from '$1' and writing to '${OutputFile}' ..."
             grep -v '^\s*$\|^\s*\#' "$1" > "${OutputFile}"
-        
-            printf "%s\n" "${ANSI_BLUE}${OutputFile}${ANSI_NOCOLOR}"
-            printf "%s\n" "${ANSI_BLUE}--------------------------------------------------------------------------------${ANSI_NOCOLOR}"
-            while IFS='' read -r line; do
-              printf "  %s\n" "${ANSI_CYAN}$line${ANSI_NOCOLOR}"
-            done < "${OutputFile}"
-            printf "%s\n" "${ANSI_BLUE}--------------------------------------------------------------------------------${ANSI_NOCOLOR}"
+            cat "${OutputFile}" | sed 's/^/  /'
+            printf "::endgroup::\n"
           }
 
           DockerImageSizeUncompressed() {
             docker image inspect $1 --format='{{.Size}}' | numfmt --to=iec --format '%.2f'
           }
 
-          printf "%s\n" "Convert 'Common.list' to 'Packages.list' ..."
+          printf -- "Convert 'Common.list' to 'Packages.list' ...\n"
           RemoveComments Common.list Packages.list
 
-          printf "%s\n" "Building docker file 'Dockerfile' ..."
+          printf -- "Building docker file 'Dockerfile' ...\n"
           docker buildx build \
             --file Dockerfile \
             --build-arg IMAGE=${{ steps.variables.outputs.base_image }} \
@@ -112,24 +109,38 @@ jobs:
             . 2>&1 \
           | ./Docker.buildx.sh
           # check return codes from docker incase of error.
+          
+          printf -- "Docker image '%s' has %s\n" "${{ steps.variables.outputs.miktex_image }}" "$(DockerImageSizeUncompressed ${{ steps.variables.outputs.miktex_image }})"
 
+      - name: ☑ Checking MikTeX image '${{ steps.variables.outputs.miktex_image }}'
+        id: test
+        run: |
+          DockerImageSizeUncompressed() {
+            docker image inspect $1 --format='{{.Size}}' | numfmt --to=iec --format '%.2f'
+          }
+          
+          printf -- "Docker image '%s' has %s\n" "${{ steps.variables.outputs.miktex_image }}" "$(DockerImageSizeUncompressed ${{ steps.variables.outputs.miktex_image }})"
           printf -- "Labels of '${{ steps.variables.outputs.miktex_image }}':\n"
           docker inspect --format='{{json .Config.Labels}}' "${{ steps.variables.outputs.miktex_image }}" | jq
           
-          printf "%s\n" "Docker image '${{ steps.variables.outputs.miktex_image }}' has $(DockerImageSizeUncompressed ${{ steps.variables.outputs.miktex_image }})"
-
-      - name: ☑ Checking MikTeX image '${{ steps.variables.outputs.miktex_image }}'
-        run: |
-          printf "%s\n" "Docker image '${{ steps.variables.outputs.miktex_image }}' has $(DockerImageSizeUncompressed ${{ steps.variables.outputs.miktex_image }})"
+          docker container run --rm ${{ steps.variables.outputs.miktex_image }} bash -c 'printf "%s\n" "which pdflatex: $(which pdflatex) ($(pdflatex --version | head -n 1))"'
+          MIKTEX_VERSION="$(docker container run --rm ${{ steps.variables.outputs.miktex_image }} bash -c "miktex --version | head -n 1")"
+          printf -- "MikTeX version: -%s-\n" "${MIKTEX_VERSION}"
           
-          docker container run --rm ${{ steps.variables.outputs.miktex_image }} 'printf "%s\n" "which pdflatex: $(which pdflatex)"'
+          tee "${GITHUB_OUTPUT}" <<EOF
+          miktex_version=${MIKTEX_VERSION}
+          EOF
 
       - name: 🔑 Login and push '${{ steps.variables.outputs.miktex_image }}' to Docker Hub
         run: |
+          DockerImageSizeUncompressed() {
+            docker image inspect $1 --format='{{.Size}}' | numfmt --to=iec --format '%.2f'
+          }
+          
           printf "%s\n" "Login at Docker Hub ..."
           printf "%s\n" "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ vars.DOCKERHUB_USERNAME }} --password-stdin
         
-          printf "%s\n" "Docker image '${{ steps.variables.outputs.miktex_image }}' has $(DockerImageSizeUncompressed ${{ steps.variables.outputs.miktex_image }})"
+          printf -- "Docker image '%s' has %s\n" "${{ steps.variables.outputs.miktex_image }}" "$(DockerImageSizeUncompressed ${{ steps.variables.outputs.miktex_image }})"
           docker image push ${{ steps.variables.outputs.miktex_image }}
 
   Specific:

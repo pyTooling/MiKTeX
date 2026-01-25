@@ -18,8 +18,8 @@ RUN apt-get update \
 # && apt-get dist-clean
 
 # Install MikTeX
-RUN curl -fsSL https://miktex.org/download/key | tee /usr/share/keyrings/miktex-keyring.asc > /dev/null
-RUN echo "deb [signed-by=/usr/share/keyrings/miktex-keyring.asc] https://miktex.org/download/debian ${MIKTEX_SRC_REPO} universe" | tee /etc/apt/sources.list.d/miktex.list
+RUN curl -fsSL https://miktex.org/download/key | gpg --dearmor -o /usr/share/keyrings/miktex.gpg
+RUN echo "deb [signed-by=/usr/share/keyrings/miktex.gpg] https://miktex.org/download/debian bookworm universe" | tee /etc/apt/sources.list.d/miktex.list
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
     ghostscript \
