@@ -20,54 +20,39 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # =============================================================================
-
-# work around for Darwin (Mac OS)
-READLINK=readlink; if [[ $(uname) == "Darwin" ]]; then READLINK=greadlink; fi
+# shellcheck shell=bash
 
 # Save working directory
 WorkingDir=$(pwd)
-ScriptDir="$($READLINK -f $(dirname $0))"
-RootDir="$($READLINK -f $ScriptDir/..)"
+ScriptDir="$(readlink -f "$(dirname "$0")")"
+RootDir="$(readlink -f "$ScriptDir/..")"
 
-ANSI_ENABLE_COLOR() {
-	ENABLECOLOR='-c '
-	ANSI_BLACK=$'\x1b[30m'
-	ANSI_RED=$'\x1b[31m'
-	ANSI_GREEN=$'\x1b[32m'
-	ANSI_YELLOW=$'\x1b[33m'
-	ANSI_BLUE=$'\x1b[34m'
-	ANSI_MAGENTA=$'\x1b[35m'
-	ANSI_CYAN=$'\x1b[36m'
-	ANSI_DARK_GRAY=$'\x1b[90m'
-	ANSI_LIGHT_GRAY=$'\x1b[37m'
-	ANSI_LIGHT_RED=$'\x1b[91m'
-	ANSI_LIGHT_GREEN=$'\x1b[92m'
-	ANSI_LIGHT_YELLOW=$'\x1b[93m'
-	ANSI_LIGHT_BLUE=$'\x1b[94m'
-	ANSI_LIGHT_MAGENTA=$'\x1b[95m'
-	ANSI_LIGHT_CYAN=$'\x1b[96m'
-	ANSI_WHITE=$'\x1b[97m'
-	ANSI_NOCOLOR=$'\x1b[0m'
+ANSI_BLACK=$'\x1b[30m'
+ANSI_RED=$'\x1b[31m'
+ANSI_GREEN=$'\x1b[32m'
+ANSI_YELLOW=$'\x1b[33m'
+ANSI_BLUE=$'\x1b[34m'
+ANSI_MAGENTA=$'\x1b[35m'
+ANSI_CYAN=$'\x1b[36m'
+ANSI_DARK_GRAY=$'\x1b[90m'
+ANSI_LIGHT_GRAY=$'\x1b[37m'
+ANSI_LIGHT_RED=$'\x1b[91m'
+ANSI_LIGHT_GREEN=$'\x1b[92m'
+ANSI_LIGHT_YELLOW=$'\x1b[93m'
+ANSI_LIGHT_BLUE=$'\x1b[94m'
+ANSI_LIGHT_MAGENTA=$'\x1b[95m'
+ANSI_LIGHT_CYAN=$'\x1b[96m'
+ANSI_WHITE=$'\x1b[97m'
+ANSI_NOCOLOR=$'\x1b[0m'
 
-	# red texts
-	COLORED_ERROR="${ANSI_RED}[ERROR]"
-	COLORED_FAILED="${ANSI_RED}[FAILED]${ANSI_NOCOLOR}"
-
-	# yellow texts
-	COLORED_WARNING="${ANSI_YELLOW}[WARNING]"
-
-	# green texts
-	COLORED_PASSED="${ANSI_GREEN}[PASSED]${ANSI_NOCOLOR}"
-	COLORED_DONE="${ANSI_GREEN}[DONE]${ANSI_NOCOLOR}"
-	COLORED_SUCCESSFUL="${ANSI_GREEN}[SUCCESSFUL]${ANSI_NOCOLOR}"
-}
-ANSI_ENABLE_COLOR
+# red texts
+COLORED_ERROR="${ANSI_RED}[ERROR]"
 
 # command line argument processing
 COMMAND=2  # 0-help, 1-unknown option, 2-no arg needed
 INDENT=""
 VERBOSE=0; DEBUG=0
-while [[ $# > 0 ]]; do
+while [[ $# -gt 0 ]]; do
 	key="$1"
 	case $key in
 		-i|--indent)
@@ -126,7 +111,7 @@ Pattern_Tagging='#[0-9]+ naming to (.*?) done'
 Pattern_MIKTEX='#[0-9]+ [0-9]+\.[0-9]+ Installing package'
 
 group=0
-while IFS='\n' read -r line; do
+while IFS=$'\n' read -r line; do
 	if [[ "${line}" =~ $Pattern_FROM ]]; then
 		printf "::group::%s\n" "${INDENT}${ANSI_MAGENTA}${line}${ANSI_NOCOLOR}"
 		group=1

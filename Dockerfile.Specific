@@ -1,15 +1,6 @@
 ARG IMAGE
-ARG BASE_VARIANT
-ARG VARIANT
 
 FROM ${IMAGE}
-ARG BASE_VARIANT
-ARG VARIANT
-
-# Meta information
-LABEL maintainer="Patrick Lehmann <Paebbels@gmail.com>"
-LABEL version="0.1"
-LABEL description="MikTeX with preinstalled packages for ${VARIANT} based on ${BASE_VARIANT}."
 
 RUN --mount=type=bind,target=/context \
      miktex --admin --verbose packages update-package-database \
