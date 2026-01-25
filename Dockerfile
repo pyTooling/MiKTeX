@@ -45,3 +45,5 @@ RUN --mount=type=bind,target=/context \
 ENV MIKTEX_USERCONFIG=/miktex/.miktex/texmfs/config
 ENV MIKTEX_USERDATA=/miktex/.miktex/texmfs/data
 ENV MIKTEX_USERINSTALL=/miktex/.miktex/texmfs/install
+
+ENV MIKTEX_MAINT_GIVEUP_AFTER_DAYS=9999
