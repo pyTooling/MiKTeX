@@ -1,15 +1,10 @@
+# check=skip=InvalidDefaultArgInFrom;error=true
+
 ARG IMAGE
-ARG OS_VERSION
-ARG PY_VERSION
+ARG MIKTEX_SRC_REPO
 
 FROM ${IMAGE}
-ARG OS_VERSION
-ARG PY_VERSION
-
-# Meta information
-LABEL maintainer="Patrick Lehmann <Paebbels@gmail.com>"
-LABEL version="0.1"
-LABEL description="MikTeX based on Debian ${OS_VERSION} and Python ${PY_VERSION}."
+ARG MIKTEX_SRC_REPO
 
 # Install Debian packages
 RUN apt-get update \
@@ -20,10 +15,11 @@ RUN apt-get update \
     curl \
  && rm -rf /var/lib/apt/lists/* \
  && apt-get clean
+# && apt-get dist-clean
 
 # Install MikTeX
-RUN curl -fsSL https://miktex.org/download/key | tee /usr/share/keyrings/miktex-keyring.asc > /dev/null
-RUN echo "deb [signed-by=/usr/share/keyrings/miktex-keyring.asc] https://miktex.org/download/debian ${OS_VERSION} universe" | tee /etc/apt/sources.list.d/miktex.list
+RUN curl -fsSL https://miktex.org/download/key | gpg --dearmor -o /usr/share/keyrings/miktex.gpg
+RUN echo "deb [signed-by=/usr/share/keyrings/miktex.gpg] https://miktex.org/download/debian bookworm universe" | tee /etc/apt/sources.list.d/miktex.list
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
     ghostscript \
@@ -32,6 +28,7 @@ RUN apt-get update \
     miktex \
  && rm -rf /var/lib/apt/lists/* \
  && apt-get clean
+# && apt-get dist-clean
 
 # Install executables like lualatex into /usr/local/bin
 RUN miktexsetup --shared=yes finish
@@ -49,4 +46,4 @@ ENV MIKTEX_USERCONFIG=/miktex/.miktex/texmfs/config
 ENV MIKTEX_USERDATA=/miktex/.miktex/texmfs/data
 ENV MIKTEX_USERINSTALL=/miktex/.miktex/texmfs/install
 
-ENTRYPOINT /bin/bash -l
+ENV MIKTEX_MAINT_GIVEUP_AFTER_DAYS=9999
