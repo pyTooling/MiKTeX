@@ -13,6 +13,7 @@ RUN apt-get update \
     ca-certificates \
     gnupg \
     curl \
+    tree \
  && rm -rf /var/lib/apt/lists/* \
  && apt-get clean
 # && apt-get dist-clean
