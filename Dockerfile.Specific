@@ -4,6 +4,17 @@ ARG IMAGE
 
 FROM ${IMAGE}
 
+# Install dependencies via apt-get
+RUN --mount=type=bind,target=/context \
+    apt-get update \
+ && xargs -a /context/Install.packages apt-get install -y --no-install-recommends \
+ && rm -rf /var/lib/apt/lists/* \
+ && apt-get clean
+# TODO: rm and clean can be replaced by `apt-get dist-clean`, when supported by all OS versions.
+
+RUN --mount=type=bind,target=/context \
+    xargs -a /context/Install.npm npm install -g
+
 RUN --mount=type=bind,target=/context \
      miktex --admin --verbose packages update-package-database \
   && (miktex --admin --verbose packages install --package-id-file /context/Packages.list || (cat /var/log/miktex/mpmcli_admin.log && exit 1)) \
