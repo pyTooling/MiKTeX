@@ -54,9 +54,9 @@ RUN configFile="$(find /usr/local/share/miktex-texmf -name "texmfapp.ini" 2>/dev
     printf -- "Patching '${configFile}' ..."; \
     if [[ -f "${configFile}" ]]; then \
       sed -i \
-        -e 's/^error_line = .*/error_line = 1000/' \
+        -e 's/^error_line = .*/error_line = 10000/' \
         -e 's/^half_error_line = .*/half_error_line = 200/' \
-        -e 's/^max_print_line = .*/max_print_line = 1000/' \
+        -e 's/^max_print_line = .*/max_print_line = 10000/' \
       "${configFile}"; \
       printf -- "[DONE]\n"; \
     else \
@@ -90,5 +90,3 @@ ENV MIKTEX_USERCONFIG=/latex/.miktex/texmfs/config \
 
 RUN mkdir -p $MIKTEX_USERCONFIG $MIKTEX_USERDATA $MIKTEX_USERINSTALL \
  && chown -R latex:latex /latex
-
-USER latex
