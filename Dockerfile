@@ -59,3 +59,7 @@ ENV MIKTEX_USERDATA=/miktex/.miktex/texmfs/data
 ENV MIKTEX_USERINSTALL=/miktex/.miktex/texmfs/install
 
 ENV MIKTEX_MAINT_GIVEUP_AFTER_DAYS=9999
+
+# Install STDOUT filter scripts for LaTeX
+RUN --mount=type=bind,target=/context \
+    install -m 755 /context/filter.latexmk.sh /usr/local/bin/filter.latexmk.sh

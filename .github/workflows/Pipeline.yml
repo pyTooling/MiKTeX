@@ -173,6 +173,10 @@ jobs:
             exit 1
           fi
 
+      - name: Check filters
+        run: |
+          filter.latexmk.sh --help
+
   Specific:
     name: ${{ matrix.icon }} Build specific MiKTeX image for ${{ matrix.name }}
     runs-on: 'ubuntu-24.04'
