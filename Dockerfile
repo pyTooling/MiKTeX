@@ -24,7 +24,7 @@ ARG MIKTEX_SRC_REPO
 # Install dependencies via apt-get
 RUN --mount=type=bind,target=/context \
     apt-get update \
- && xargs -a /context/Debian.packages apt-get install -y --no-install-recommends \
+ && xargs --no-run-if-empty --exit --arg-file=/context/Debian.packages apt-get install -y --no-install-recommends \
  && rm -rf /var/lib/apt/lists/* \
  && apt-get clean
 # TODO: rm and clean can be replaced by `apt-get dist-clean`, when supported by all OS versions.
@@ -38,7 +38,7 @@ RUN echo "deb [signed-by=/usr/share/keyrings/miktex.gpg] https://miktex.org/down
 # Install dependencies via apt-get
 RUN --mount=type=bind,target=/context \
     apt-get update \
- && xargs -a /context/Install.packages apt-get install -y --no-install-recommends \
+ && xargs --no-run-if-empty --exit --arg-file=/context/Install.packages apt-get install -y --no-install-recommends \
  && rm -rf /var/lib/apt/lists/* \
  && apt-get clean
 # TODO: rm and clean can be replaced by `apt-get dist-clean`, when supported by all OS versions.
