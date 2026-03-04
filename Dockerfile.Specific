@@ -4,6 +4,8 @@ ARG IMAGE
 
 FROM ${IMAGE}
 
+USER root
+
 # Install dependencies via apt-get
 RUN --mount=type=bind,target=/context \
     apt-get update \
@@ -19,3 +21,5 @@ RUN --mount=type=bind,target=/context \
      miktex --admin --verbose packages update-package-database \
   && (miktex --admin --verbose packages install --package-id-file /context/Packages.list || (cat /var/log/miktex/mpmcli_admin.log && exit 1)) \
   && initexmf --admin --update-fndb
+
+USER latex

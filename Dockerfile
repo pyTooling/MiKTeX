@@ -63,3 +63,12 @@ ENV MIKTEX_MAINT_GIVEUP_AFTER_DAYS=9999
 # Install STDOUT filter scripts for LaTeX
 RUN --mount=type=bind,target=/context \
     install -m 755 /context/filter.latexmk.sh /usr/local/bin/filter.latexmk.sh
+
+RUN groupadd --gid 1000 latex \
+ && useradd --uid 1000 --gid 1000 -m -d /latex latex \
+ && printf -- "latex ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/latex \
+ && chmod 0440 /etc/sudoers.d/latex
+
+WORKDIR /latex
+ENV HOME=/latex
+USER latex

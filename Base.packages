@@ -2,4 +2,5 @@ apt-transport-https
 ca-certificates
 gnupg
 curl
+sudo
 tree
