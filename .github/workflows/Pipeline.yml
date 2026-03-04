@@ -1,3 +1,19 @@
+# The MIT License (MIT)
+#
+# Copyright © 2026 The pyTooling Authors
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+# documentation files (the “Software”), to deal in the Software without restriction, including without limitation the
+# rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
+# persons to whom the Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
+# Software.
+#
+# THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 name: Build MiKTeX images
 
 on:
@@ -140,6 +156,8 @@ jobs:
           miktex_version=${MIKTEX_VERSION}
           EOF
 
+# TODO: add miktex version as label to image
+
       - name: 🔑 Login and push '${{ steps.variables.outputs.miktex_image }}' to Docker Hub
         run: |
           DockerImageSizeUncompressed() {
@@ -263,10 +281,10 @@ jobs:
           }
           
           printf -- "Docker image '%s' has %s\n" "${{ steps.variables.outputs.specific_image }}" "$(DockerImageSizeUncompressed ${{ steps.variables.outputs.specific_image }})"
-          printf -- "Labels of '${{ steps.variables.outputs.miktex_image }}':\n"
-          docker inspect --format='{{json .Config.Labels}}' "${{ steps.variables.outputs.miktex_image }}" | jq
+          printf -- "Labels of '${{ steps.variables.outputs.specific_image }}':\n"
+          docker inspect --format='{{json .Config.Labels}}' "${{ steps.variables.outputs.specific_image }}" | jq
           
-          docker container run --rm ${{ steps.variables.outputs.specific_image }} bash -c 'xelatex --version'
+          docker container run --rm ${{ steps.variables.outputs.specific_image }} bash -c 'lualatex --version'
 
       - name: 🔑 Login and push '${{ steps.variables.outputs.specific_image }}' to Docker Hub
         run: |

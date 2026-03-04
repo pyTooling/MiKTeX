@@ -44,3 +44,13 @@ Sphinx specific package list: [Sphinx.list](Sphinx.list)
 ### Pandoc
 
 **planned**
+
+
+## License
+
+This Docker Image build receipt and all it's accompanying configuration and script files (source code) are licensed
+under [The MIT License](LICENSE.md) if not mentioned otherwise within the respective file.
+
+---
+
+SPDX-License-Identifier: MIT
