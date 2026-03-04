@@ -24,6 +24,8 @@ gsftopk
 # l3backend -> handled in Common.list
 # latex-tools -> handled in Common.list
 # letltxmacro -> handled in Common.list
+libertinus-fonts
+libertinus-otf
 # ltxcmds -> handled in Common.list
 mmap
 modes
