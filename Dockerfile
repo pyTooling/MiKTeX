@@ -1,5 +1,20 @@
 # check=skip=InvalidDefaultArgInFrom;error=true
-
+# The MIT License (MIT)
+#
+# Copyright © 2026 The pyTooling Authors
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+# documentation files (the “Software”), to deal in the Software without restriction, including without limitation the
+# rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
+# persons to whom the Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
+# Software.
+#
+# THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ARG IMAGE
 ARG MIKTEX_SRC_REPO
 
@@ -48,27 +63,32 @@ RUN configFile="$(find /usr/local/share/miktex-texmf -name "texmfapp.ini" 2>/dev
       printf -- "[NOT FOUND]\n"; \
     fi
 
+RUN groupadd --gid 1000 latex \
+ && useradd --uid 1000 --gid 1000 -m -d /latex latex \
+ && printf -- "latex ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/latex \
+ && chmod 0440 /etc/sudoers.d/latex \
+ && ls -lAh /
+
+WORKDIR /latex
+ENV HOME=/latex
+
 # Install LaTeX packages
 RUN --mount=type=bind,target=/context \
      miktex --admin --verbose packages update-package-database \
  && (miktex --admin --verbose packages install --package-id-file /context/Packages.list || (cat /var/log/miktex/mpmcli_admin.log && exit 1)) \
  && initexmf --admin --update-fndb
 
-ENV MIKTEX_USERCONFIG=/miktex/.miktex/texmfs/config
-ENV MIKTEX_USERDATA=/miktex/.miktex/texmfs/data
-ENV MIKTEX_USERINSTALL=/miktex/.miktex/texmfs/install
-
-ENV MIKTEX_MAINT_GIVEUP_AFTER_DAYS=9999
-
 # Install STDOUT filter scripts for LaTeX
 RUN --mount=type=bind,target=/context \
     install -m 755 /context/filter.latexmk.sh /usr/local/bin/filter.latexmk.sh
 
-RUN groupadd --gid 1000 latex \
- && useradd --uid 1000 --gid 1000 -m -d /latex latex \
- && printf -- "latex ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/latex \
- && chmod 0440 /etc/sudoers.d/latex
+# Configure MiKTeX directories and create directories if mountpoint from host is missing.
+ENV MIKTEX_USERCONFIG=/latex/.miktex/texmfs/config \
+    MIKTEX_USERDATA=/latex/.miktex/texmfs/data \
+    MIKTEX_USERINSTALL=/latex/.miktex/texmfs/install \
+    MIKTEX_MAINT_GIVEUP_AFTER_DAYS=9999
 
-WORKDIR /latex
-ENV HOME=/latex
+RUN mkdir -p $MIKTEX_USERCONFIG $MIKTEX_USERDATA $MIKTEX_USERINSTALL \
+ && chown -R latex:latex /latex
+
 USER latex
