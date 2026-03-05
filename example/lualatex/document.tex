@@ -1,0 +1,41 @@
+% !TeX encoding = UTF-8
+% !TeX program = lualatex
+
+\documentclass{scrarticle}
+
+\usepackage{libertinus-otf}
+
+\usepackage{unicode-math}
+\setmathfont{LibertinusMath}
+
+\usepackage{blindtext}
+
+\newfontfamily\emojifont[Renderer=OpenType]{NotoColorEmoji.ttf}
+
+\usepackage{newunicodechar}
+\newunicodechar{📦}{{\emojifont 📦}}
+
+
+\begin{document}
+
+\par\rmfamily\blindtext
+\par\sffamily\blindtext
+\par\ttfamily\blindtext
+
+\rmfamily Lorem
+\sffamily Lorem
+\ttfamily Lorem
+
+\par\textit{\rmfamily Lorem} $Lorem$
+\par\textit{\sffamily Lorem} $Lorem$
+
+\ttfamily 0O
+
+\rmfamily
+$$aM \le \sum \Bigg( a\cdot b \Bigg)$$
+
+$$aM \le \sum \left( \frac12 \frac{a}{b} \right)$$
+
+a{\emojifont \Uchar"1F600 📦 👋🏻👋🏾}b
+
+\end{document}

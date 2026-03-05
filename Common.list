@@ -67,6 +67,8 @@ latexmk
 latex-graphics-dev
 latex-tools
 letltxmacro
+libertinus-fonts
+libertinus-otf
 listliketab
 listings
 listofitems

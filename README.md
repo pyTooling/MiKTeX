@@ -7,7 +7,7 @@ Docker Hub: https://hub.docker.com/r/pytooling/miktex
 ## Usage
 
 ```bash
-docker image run --rm -v $(pwd):/data pytooling/miktex:latest
+docker image run --rm -v $(pwd):/latex pytooling/miktex:latest
 ```
 
 ## Installed Tools
@@ -21,6 +21,9 @@ Installed additional tools are:
   * Preinstalled packages: [Common.list](Common.list) 
 * Perl
 * Python 3.14
+* sudo
+* tree
+
 
 ## Why another MikTeX Docker Image?
 
@@ -34,8 +37,14 @@ Installed additional tools are:
 
 ### Sphinx
 
-Common package list: [Common.list](Common.list)  
-Sphinx specific package list: [Sphinx.list](Sphinx.list)
+MiKTeX:
+* Common package list: [Common.list](Common.list)  
+* Sphinx specific package list: [Sphinx.list](Sphinx.list)
+
+Additional Debian Packages: [Sphinx.packages](Sphinx.packages)
+* nodejs: [Sphinx.npm](Sphinx.npm)
+  * Mermaid
+
 
 ### Doxygen
 

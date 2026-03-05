@@ -24,7 +24,7 @@ ARG MIKTEX_SRC_REPO
 # Install dependencies via apt-get
 RUN --mount=type=bind,target=/context \
     apt-get update \
- && xargs -a /context/Debian.packages apt-get install -y --no-install-recommends \
+ && xargs --no-run-if-empty --exit --arg-file=/context/Debian.packages apt-get install -y --no-install-recommends \
  && rm -rf /var/lib/apt/lists/* \
  && apt-get clean
 # TODO: rm and clean can be replaced by `apt-get dist-clean`, when supported by all OS versions.
@@ -38,7 +38,7 @@ RUN echo "deb [signed-by=/usr/share/keyrings/miktex.gpg] https://miktex.org/down
 # Install dependencies via apt-get
 RUN --mount=type=bind,target=/context \
     apt-get update \
- && xargs -a /context/Install.packages apt-get install -y --no-install-recommends \
+ && xargs --no-run-if-empty --exit --arg-file=/context/Install.packages apt-get install -y --no-install-recommends \
  && rm -rf /var/lib/apt/lists/* \
  && apt-get clean
 # TODO: rm and clean can be replaced by `apt-get dist-clean`, when supported by all OS versions.
@@ -54,9 +54,9 @@ RUN configFile="$(find /usr/local/share/miktex-texmf -name "texmfapp.ini" 2>/dev
     printf -- "Patching '${configFile}' ..."; \
     if [[ -f "${configFile}" ]]; then \
       sed -i \
-        -e 's/^error_line = .*/error_line = 1000/' \
+        -e 's/^error_line = .*/error_line = 10000/' \
         -e 's/^half_error_line = .*/half_error_line = 200/' \
-        -e 's/^max_print_line = .*/max_print_line = 1000/' \
+        -e 's/^max_print_line = .*/max_print_line = 10000/' \
       "${configFile}"; \
       printf -- "[DONE]\n"; \
     else \
@@ -90,5 +90,3 @@ ENV MIKTEX_USERCONFIG=/latex/.miktex/texmfs/config \
 
 RUN mkdir -p $MIKTEX_USERCONFIG $MIKTEX_USERDATA $MIKTEX_USERINSTALL \
  && chown -R latex:latex /latex
-
-USER latex

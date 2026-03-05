@@ -25,7 +25,7 @@ jobs:
     uses: pyTooling/Actions/.github/workflows/PrepareJob.yml@r7
 
   MiKTeX:
-    name: 🛳️ Build MiKTeX base-image
+    name: 🐋 Build MiKTeX base-image
     runs-on: 'ubuntu-24.04'
 
     outputs:
@@ -40,7 +40,7 @@ jobs:
       miktex_version:           ${{ steps.test.outputs.miktex_version }}
 
     steps:
-      - name: 🖉 Variables
+      - name: 🖊️ Variables
         id: variables
         run: |
           base_image_name="python"
@@ -171,16 +171,14 @@ jobs:
           docker image push ${{ steps.variables.outputs.miktex_image }}
 
   SanityCheck:
-    name: Check MiKTeX installation
+    name: ⚓ Check MiKTeX installation
     runs-on: 'ubuntu-24.04'
     needs:
       - MiKTeX
     container:
       image: ${{ needs.MiKTeX.outputs.miktex_image }}
-      volumes:
-        - ${{ github.workspace }}/latex:/latex
     steps:
-      - name: Check default shell
+      - name: 🐚 Check default shell
         run: |
           printf -- "Checking active shell ...\n"
           activeShell=$(readlink /proc/$$/exe)
@@ -191,9 +189,27 @@ jobs:
             exit 1
           fi
 
-      - name: Check filters
+      - name: 🕶️ Check filters
         run: |
           filter.latexmk.sh --help
+
+      - name: 📋 List installed fonts
+        run: |
+          sudo -u latex luaotfload-tool --list=*
+
+      - name: ⏬ Checkout repository
+        uses: actions/checkout@v6
+
+      - name: ⚙️ Compile 'example/document.tex'
+        run: |
+          set -o pipefail
+          
+          chown -R latex:latex .
+
+          cd ./example/lualatex
+          sudo -u latex latexmk --lualatex --interaction=nonstopmode --file-line-error --halt-on-error document.tex | filter.latexmk.sh
+          
+          ls -lAh *.pdf
 
   Specific:
     name: ${{ matrix.icon }} Build specific MiKTeX image for ${{ matrix.name }}
@@ -204,10 +220,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - {'icon': '📓', 'name': 'Sphinx', 'image': 'sphinx'}
+          - {'icon': '🐋📓', 'name': 'Sphinx', 'image': 'sphinx'}
 
     steps:
-      - name: 🖉 Variables
+      - name: 🖊️ Variables
         id: variables
         run: |
           tee "${GITHUB_OUTPUT}" <<EOF
@@ -299,19 +315,17 @@ jobs:
           docker image push ${{ steps.variables.outputs.specific_image }}
 
   SanityCheck-Sphinx:
-    name: Check MiKTeX for Sphinx installation
+    name: 🛟 Check MiKTeX for Sphinx installation
     runs-on: 'ubuntu-24.04'
     needs:
       - MiKTeX
       - Specific
     container:
       image: ${{ needs.MiKTeX.outputs.miktex_image_ns }}/${{ needs.MiKTeX.outputs.miktex_image_name }}:sphinx
-      volumes:
-        - ${{ github.workspace }}/latex:/latex
     steps:
-      - name: Check Mermaid
+      - name: 🧜‍♀️ Check Mermaid
         run: |
-          mmdc --version
+          sudo -u latex mmdc --version
 
   TriggerTaggedRelease:
     uses: pyTooling/Actions/.github/workflows/TagReleaseCommit.yml@r7
