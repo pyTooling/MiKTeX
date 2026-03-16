@@ -103,6 +103,9 @@ jobs:
           RemoveComments Common.packages Install.packages
           printf -- "Convert 'Common.list' to 'Packages.list' ...\n"
           RemoveComments Common.list Packages.list
+          printf -- "Insert build date into 'pytooling.sty' ...\n"
+          STYLE_PACKAGE_DATE=$(date +'%Y/%m/%d')
+          sed -i "s|\\\\ProvidesPackage{pytooling}\[2000/00/00|\\\\ProvidesPackage{pytooling}\[$STYLE_PACKAGE_DATE|g" pytooling.sty
 
           printf -- "Building docker file 'Dockerfile' ...\n"
           docker buildx build \

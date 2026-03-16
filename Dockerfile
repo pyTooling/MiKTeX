@@ -54,11 +54,12 @@ RUN configFile="$(find /usr/local/share/miktex-texmf -name "texmfapp.ini" 2>/dev
     printf -- "Patching '${configFile}' ..."; \
     if [[ -f "${configFile}" ]]; then \
       sed -i \
-        -e 's/^error_line = .*/error_line = 10000/' \
+        -e 's/^error_line = .*/error_line = 1000/' \
         -e 's/^half_error_line = .*/half_error_line = 200/' \
-        -e 's/^max_print_line = .*/max_print_line = 10000/' \
+        -e 's/^max_print_line = .*/max_print_line = 1000/' \
       "${configFile}"; \
       printf -- "[DONE]\n"; \
+      cat "${configFile}"; \
     else \
       printf -- "[NOT FOUND]\n"; \
     fi
@@ -76,6 +77,8 @@ ENV HOME=/latex
 RUN --mount=type=bind,target=/context \
      miktex --admin --verbose packages update-package-database \
  && (miktex --admin --verbose packages install --package-id-file /context/Packages.list || (cat /var/log/miktex/mpmcli_admin.log && exit 1)) \
+ && mkdir -p /usr/local/share/texmf/tex/latex/pytooling \
+ && cp /context/pytooling.sty /usr/local/share/texmf/tex/latex/pytooling/ \
  && initexmf --admin --update-fndb
 
 # Install STDOUT filter scripts for LaTeX
