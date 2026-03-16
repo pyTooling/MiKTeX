@@ -26,7 +26,8 @@ RUN --mount=type=bind,target=/context \
     apt-get update \
  && xargs --no-run-if-empty --exit --arg-file=/context/Debian.packages apt-get install -y --no-install-recommends \
  && rm -rf /var/lib/apt/lists/* \
- && apt-get clean
+ && apt-get clean \
+ && printf -- "\n[DONE]\n"
 # TODO: rm and clean can be replaced by `apt-get dist-clean`, when supported by all OS versions.
 
 # Switch Dash to Bash
@@ -59,7 +60,6 @@ RUN configFile="$(find /usr/local/share/miktex-texmf -name "texmfapp.ini" 2>/dev
         -e 's/^max_print_line = .*/max_print_line = 1000/' \
       "${configFile}"; \
       printf -- "[DONE]\n"; \
-      cat "${configFile}"; \
     else \
       printf -- "[NOT FOUND]\n"; \
     fi
@@ -68,7 +68,7 @@ RUN groupadd --gid 1000 latex \
  && useradd --uid 1000 --gid 1000 -m -d /latex latex \
  && printf -- "latex ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/latex \
  && chmod 0440 /etc/sudoers.d/latex \
- && ls -lAh /
+ && printf -- "\n[DONE]\n"
 
 WORKDIR /latex
 ENV HOME=/latex
@@ -77,9 +77,10 @@ ENV HOME=/latex
 RUN --mount=type=bind,target=/context \
      miktex --admin --verbose packages update-package-database \
  && (miktex --admin --verbose packages install --package-id-file /context/Packages.list || (cat /var/log/miktex/mpmcli_admin.log && exit 1)) \
- && mkdir -p /usr/local/share/texmf/tex/latex/pytooling \
- && cp /context/pytooling.sty /usr/local/share/texmf/tex/latex/pytooling/ \
- && initexmf --admin --update-fndb
+ && mkdir -p /usr/local/share/miktex-texmf/tex/latex/pytooling \
+ && cp /context/pytooling.sty /usr/local/share/miktex-texmf/tex/latex/pytooling/ \
+ && initexmf --admin --update-fndb \
+ && printf -- "\n[DONE]\n"
 
 # Install STDOUT filter scripts for LaTeX
 RUN --mount=type=bind,target=/context \

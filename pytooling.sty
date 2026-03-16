@@ -1,6 +1,14 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{pytooling}[2000/00/00 pyTooling Unicode Definitions]
 
+% Check if LuaLaTeX is being used
+\ifdefined\directlua
+\else
+  \PackageError{pytooling}{LuaLaTeX is required for this package}{%
+  This package uses unicode definitions and features specifically
+  designed for the LuaTeX engine. Please switch your compiler.}
+\fi
+
 \newunicodechar{≤}{\ensuremath{\le}}
 \newunicodechar{—}{---}
 \newunicodechar{…}{\dots}

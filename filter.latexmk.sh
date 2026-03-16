@@ -102,8 +102,11 @@ fi
 
 # RegExp patterns
 ALL_TARGETS="^Latexmk: All targets"
+LATEX_ERROR="^.*:\d+: LaTeX Error:"
 PACKAGE_WARNING="^Package (\w+) Warning:"
 NO_FILE="^\s*No file (.*)\.tex"
+UNDEFINED_CONTROL_SEQUENCE="Undefined control sequence"
+FATAL_ERROR_OCCURRED=".*==> Fatal error occurred"
 
 # Placeholder for the current timecode, if used
 TIMECODE=""
@@ -114,7 +117,11 @@ while read -r line; do
 
 	if [[ "${line:0:10}" == "Run number" ]]; then
 		printf -- "$INDENT${ANSI_LIGHT_CYAN}${TIMECODE}${line}${ANSI_NOCOLOR}\n"
-	elif [[ "${line:0:14}" == "LaTeX Warning:" ]]; then
+	elif [[ "${line:0:9}" == "Running '" ]]; then
+		printf -- "$INDENT${ANSI_LIGHT_CYAN}${TIMECODE}${line}${ANSI_NOCOLOR}\n"
+	elif [[ "${line}" =~ ${LATEX_ERROR} ]]; then
+		printf -- "$INDENT${ANSI_YELLOW}${TIMECODE}${line}${ANSI_NOCOLOR}\n"
+	elif [[ "${line:0:14}" == "LaTeX Warning:" || "${line:2:14}" == "LaTeX Warning:" ]]; then
 		printf -- "$INDENT${ANSI_YELLOW}${TIMECODE}${line}${ANSI_NOCOLOR}\n"
 	elif [[ "${line}" =~ ${PACKAGE_WARNING} ]]; then
 		printf -- "$INDENT${ANSI_YELLOW}${TIMECODE}${line}${ANSI_NOCOLOR}\n"
@@ -127,7 +134,10 @@ while read -r line; do
 		printf -- "$INDENT${ANSI_YELLOW}${TIMECODE}${line}${ANSI_NOCOLOR}\n"
 	elif [[ "${line:0:23}" == "Latex failed to resolve" ]]; then
 		printf -- "$INDENT${ANSI_LIGHT_RED}${TIMECODE}${line}${ANSI_NOCOLOR}\n"
-	elif [[ "${line:0:29}" == "! Undefined control sequence." ]]; then
+	elif [[ "${line:0:18}" == "Missing character:" || "${line:2:18}" == "Missing character:" ]]; then
+		printf -- "$INDENT${ANSI_RED}${TIMECODE}${line}${ANSI_NOCOLOR}\n"
+		EXIT_CODE=1
+	elif [[ "${line}" =~ ${UNDEFINED_CONTROL_SEQUENCE} ]]; then
 		printf -- "$INDENT${ANSI_RED}${TIMECODE}${line}${ANSI_NOCOLOR}\n"
 		EXIT_CODE=2
 	elif [[ "${line:0:9}" == "! Missing" ]]; then
@@ -136,7 +146,7 @@ while read -r line; do
 	elif [[ "${line:0:17}" == "! Emergency stop." ]]; then
 		printf -- "$INDENT${ANSI_MAGENTA}${TIMECODE}${line}${ANSI_NOCOLOR}\n"
 		EXIT_CODE=2
-	elif [[ "${line:0:27}" == "!  ==> Fatal error occurred" ]]; then
+	elif [[ "${line}" =~ ${FATAL_ERROR_OCCURRED} ]]; then
 		printf -- "$INDENT${ANSI_MAGENTA}${TIMECODE}${line}${ANSI_NOCOLOR}\n"
 		EXIT_CODE=2
 	elif [[ "${line:0:15}" == "Latexmk: Errors" ]]; then
