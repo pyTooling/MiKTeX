@@ -1,0 +1,50 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{pytooling}[2000/00/00 pyTooling Unicode Definitions]
+
+% Check if LuaLaTeX is being used
+\ifdefined\directlua
+\else
+  \PackageError{pytooling}{LuaLaTeX is required for this package}{%
+  This package uses unicode definitions and features specifically
+  designed for the LuaTeX engine. Please switch your compiler.}
+\fi
+
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{—}{---}
+\newunicodechar{…}{\dots}
+%\newunicodechar{␣}{     }               % open box = visible space   U+2423
+\newunicodechar{⟲}{\nvcirclearrowleft}   % circular arrow counterclockwise  U+27F2
+\newunicodechar{⭠}{\arrowltog}           % Leftwards Triangle-Headed Arrow U+2B60    arrowbtog = Arrow Bottom To Gloss
+\newunicodechar{⭡}{\arrowutog}           % Upwards Triangle-Headed Arrow U+2B61
+\newunicodechar{⭢}{\arrowbtog}           % Rightwards Triangle-Headed Arrow U+2B62
+\newunicodechar{⭣}{\arrowdtog}           % Downwards Triangle-Headed Arrow U+2B63
+
+\newunicodechar{🍎}{{\emojifont 🍎}}  % red apple
+\newunicodechar{🍏}{{\emojifont 🍏}}  % green apple
+\newunicodechar{🐧}{{\emojifont 🐧}}  % penguin
+\newunicodechar{⛄}{{\emojifont ⛄}}  % snowman
+\newunicodechar{🪟}{{\emojifont 🪟}}  % window
+\newunicodechar{🏢}{{\emojifont 🏢}}  % glas building
+\newunicodechar{🐍}{{\emojifont 🐍}}  % green snake
+\newunicodechar{🔴}{{\emojifont 🔴}}  % red circle
+\newunicodechar{🟠}{{\emojifont 🟠}}   % orange circle
+\newunicodechar{🟡}{{\emojifont 🟡}}   % yellow circle
+\newunicodechar{🟢}{{\emojifont 🟢}}   % green circle
+\newunicodechar{🟣}{{\emojifont 🟣}}   % purple circle
+\newunicodechar{⚫}{{\emojifont ⚫}}  % black circle   U+26AB
+\newunicodechar{🟧}{{\emojifont 🟧}}   % red square     U+1F7E7
+\newunicodechar{🟨}{{\emojifont 🟨}}   % yellow square  U+1F7E8
+\newunicodechar{🟫}{{\emojifont 🟫}}   % braun square   U+1F7EB
+\newunicodechar{🟦}{{\emojifont 🟦}}   % blue square    U+1F7E6
+\newunicodechar{🟪}{{\emojifont 🟪}}   % purple square  U+1F7EA
+\newunicodechar{⬛}{{\emojifont ⬛}}  % black square  U+2B1B
+\newunicodechar{📦}{{\emojifont 📦}}
+\newunicodechar{📂}{{\emojifont 📂}}
+\newunicodechar{🗑}{{\emojifont 🗑}}     % Wastebasket  🗑️  U+1F5D1
+\newunicodechar{⚙}{{\emojifont ⚙}}     % Gear             ⚙️  U+2699
+\newunicodechar{❌}{{\emojifont ❌}}   % Red X                 U+274C
+\newunicodechar{🚫}{{\emojifont 🚫}}   % Prohibited        🚫  U+
+\newunicodechar{⚠}{{\emojifont ⚠}}     % Warning           ⚠️  U+26A0
+\newunicodechar{✅}{{\emojifont ✅}}   % Green checkbox        U+2705
+
+\endinput
