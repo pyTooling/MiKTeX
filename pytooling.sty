@@ -10,37 +10,56 @@
 \fi
 
 \newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{±}{\ensuremath{\pm}}
 \newunicodechar{—}{---}
 \newunicodechar{…}{\dots}
-%\newunicodechar{␣}{     }               % open box = visible space   U+2423
-\newunicodechar{⟲}{\nvcirclearrowleft}   % circular arrow counterclockwise  U+27F2
+%\newunicodechar{␣}{     }                     % open box = visible space   U+2423
+\newunicodechar{⟲}{\nvcirclearrowleft}         % circular arrow counterclockwise  U+27F2
+\newunicodechar{⭠}{\ensuremath{\arrowltog}}    % Leftwards Triangle-Headed Arrow U+2B60    arrowbtog = Arrow Bottom To Gloss
+\newunicodechar{⭡}{\ensuremath{\arrowutog}}    % Upwards Triangle-Headed Arrow U+2B61
+\newunicodechar{⭢}{\ensuremath{\arrowbtog}}    % Rightwards Triangle-Headed Arrow U+2B62
+\newunicodechar{⭣}{\ensuremath{\arrowdtog}}    % Downwards Triangle-Headed Arrow U+2B63
 
-\newunicodechar{🍎}{{\emojifont 🍎}}  % red apple
-\newunicodechar{🍏}{{\emojifont 🍏}}  % green apple
-\newunicodechar{🐧}{{\emojifont 🐧}}  % penguin
-\newunicodechar{⛄}{{\emojifont ⛄}}  % snowman
-\newunicodechar{🪟}{{\emojifont 🪟}}  % window
-\newunicodechar{🏢}{{\emojifont 🏢}}  % glas building
-\newunicodechar{🐍}{{\emojifont 🐍}}  % green snake
-\newunicodechar{🔴}{{\emojifont 🔴}}  % red circle
-\newunicodechar{🟠}{{\emojifont 🟠}}   % orange circle
-\newunicodechar{🟡}{{\emojifont 🟡}}   % yellow circle
-\newunicodechar{🟢}{{\emojifont 🟢}}   % green circle
-\newunicodechar{🟣}{{\emojifont 🟣}}   % purple circle
-\newunicodechar{⚫}{{\emojifont ⚫}}  % black circle   U+26AB
-\newunicodechar{🟧}{{\emojifont 🟧}}   % red square     U+1F7E7
-\newunicodechar{🟨}{{\emojifont 🟨}}   % yellow square  U+1F7E8
-\newunicodechar{🟫}{{\emojifont 🟫}}   % braun square   U+1F7EB
-\newunicodechar{🟦}{{\emojifont 🟦}}   % blue square    U+1F7E6
-\newunicodechar{🟪}{{\emojifont 🟪}}   % purple square  U+1F7EA
-\newunicodechar{⬛}{{\emojifont ⬛}}  % black square  U+2B1B
-\newunicodechar{📦}{{\emojifont 📦}}
-\newunicodechar{📂}{{\emojifont 📂}}
-\newunicodechar{🗑}{{\emojifont 🗑}}     % Wastebasket  🗑️  U+1F5D1
+\newunicodechar{🍎}{{\emojifont 🍎}}   % red apple            U+1F34E
+\newunicodechar{🍏}{{\emojifont 🍏}}   % green apple          U+1F34F
+\newunicodechar{🐧}{{\emojifont 🐧}}   % penguin              U+1F427
+\newunicodechar{⛄}{{\emojifont ⛄}}   % snowman              U+26C4
+\newunicodechar{🪟}{{\emojifont 🪟}}   % window               U+1FA9F
+\newunicodechar{🏢}{{\emojifont 🏢}}   % glas building        U+1F3E2
+\newunicodechar{🐍}{{\emojifont 🐍}}   % green snake          U+1F40D
+\newunicodechar{🐛}{{\emojifont 🐛}}   % Bug                  U+1F41B
+\newunicodechar{🪳}{{\emojifont 🪳}}   % Cockroach            U+1FAB3
+\newunicodechar{🔴}{{\emojifont 🔴}}   % large red circle     U+1F534
+\newunicodechar{🔵}{{\emojifont 🔵}}   % large blue circle    U+1F535
+\newunicodechar{🟠}{{\emojifont 🟠}}   % large orange circle  U+1F7E0
+\newunicodechar{🟡}{{\emojifont 🟡}}   % large yellow circle  U+1F7E1
+\newunicodechar{🟢}{{\emojifont 🟢}}   % large green circle   U+1F7E2
+\newunicodechar{🟣}{{\emojifont 🟣}}   % large purple circle  U+1F7E3
+\newunicodechar{🟤}{{\emojifont 🟤}}   % large yellow circle  U+1F7E4
+\newunicodechar{⚫}{{\emojifont ⚫}}   % medium black circle  U+26AB
+\newunicodechar{⬤}{{\emojifont ⬤}}     % black large circle   U+2B24
+\newunicodechar{🟥}{{\emojifont 🟥}}   % large red square     U+1F7E5
+\newunicodechar{🟦}{{\emojifont 🟦}}   % large blue square    U+1F7E6
+\newunicodechar{🟧}{{\emojifont 🟧}}   % large red square     U+1F7E7
+\newunicodechar{🟨}{{\emojifont 🟨}}   % large yellow square  U+1F7E8
+\newunicodechar{🟩}{{\emojifont 🟩}}   % large yellow square  U+1F7E9
+\newunicodechar{🟪}{{\emojifont 🟪}}   % large purple square  U+1F7EA
+\newunicodechar{🟫}{{\emojifont 🟫}}   % large braun square   U+1F7EB
+\newunicodechar{⬛}{{\emojifont ⬛}}   % black large square   U+2B1B
+\newunicodechar{📦}{{\emojifont 📦}}   % Package              U+1F4E6
+\newunicodechar{📁}{{\emojifont 📁}}   % File Folder          U+1F4C1
+\newunicodechar{📂}{{\emojifont 📂}}   % Open File Folder     U+1F4C2
+\newunicodechar{🪣}{{\emojifont 🪣}}   % Bucket             ️  U+1FAA3
+\newunicodechar{🗑}{{\emojifont 🗑}}     % Wastebasket      🗑️  U+1F5D1
 \newunicodechar{⚙}{{\emojifont ⚙}}     % Gear             ⚙️  U+2699
-\newunicodechar{❌}{{\emojifont ❌}}   % Red X                 U+274C
-\newunicodechar{🚫}{{\emojifont 🚫}}   % Prohibited        🚫  U+
-\newunicodechar{⚠}{{\emojifont ⚠}}     % Warning           ⚠️  U+26A0
-\newunicodechar{✅}{{\emojifont ✅}}   % Green checkbox        U+2705
+\newunicodechar{⛔}{{\emojifont ⛔}}   % No entry              U+26D4
+\newunicodechar{❌}{{\emojifont ❌}}   % Cross Mark            U+274C
+\newunicodechar{🚫}{{\emojifont 🚫}}   % No entry sign         U+1F6AB
+\newunicodechar{🛇}{{\emojifont 🛇}}    % Prohibited            U+1F6C7
+\newunicodechar{⚠}{{\emojifont ⚠}}     % Warning                U+26A0
+\newunicodechar{🚧}{{\emojifont 🚧}}   % Construction sign      U+1F6A7
+\newunicodechar{✅}{{\emojifont ✅}}   % White heavy check mark U+2705
+\newunicodechar{🔥}{{\emojifont 🔥}}   % Fire                  U+1F525
 
 \endinput
