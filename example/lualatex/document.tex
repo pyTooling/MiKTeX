@@ -1,13 +1,10 @@
 % !TeX encoding = UTF-8
 % !TeX program = lualatex
 
-\documentclass[a4paper,10pt,english]{scrarticle}
+\documentclass[a4paper,10pt]{scrbook}
 
 \usepackage{fontspec}
 \usepackage{amsmath,amssymb,amstext}
-\usepackage{polyglossia}
-\setmainlanguage{english}
-
 \usepackage{unicode-math}
 
 % Set the Text Fonts (Libertinus)
@@ -21,13 +18,31 @@
 \newfontfamily{\emojifont}[Renderer=OpenType]{NotoColorEmoji.ttf}
 \usepackage{pytooling}
 
+\usepackage[english]{babel}
 \usepackage{blindtext}
 
 
+\title{MiKTeX+LuaLaTeX+Unicode+OTF Test Document}
+\author{The pyTooling Authors}
+\date{\today}
+
 \begin{document}
+\frontmatter
+  \maketitle
+  \tableofcontents
+
+\mainmatter
+\chapter{Normal Text}
+\section{Serif Font - Main Font}
 
 \par\rmfamily\blindtext
+
+\section{Sans Serif Font - Headline Font}
+
 \par\sffamily\blindtext
+
+\section{Type Writer Font - Source Code}
+
 \par\ttfamily\blindtext
 
 \rmfamily Lorem
@@ -37,56 +52,21 @@
 \par\textit{\rmfamily Lorem} $Lorem$
 \par\textit{\sffamily Lorem} $Lorem$
 
-\ttfamily 0O
 
-\rmfamily
-$$aM \le \sum \Bigg( a\cdot b \Bigg)$$
 
-$$aM \le \sum \left( \frac12 \frac{a}{b} \right)$$
 
 a{\emojifont \Uchar"1F600 📦 👋🏻👋🏾}b
 
-\begin{itemize}
-    \item U+1F34E red apple           🍎
-    \item U+1F34F green apple         🍏
-    \item U+1F427 penguin             🐧
-    \item U+26C4  snowman             ⛄
-    \item U+1FA9F window              🪟
-    \item U+1F3E2 glas building       🏢
-    \item U+1F40D green snake         🐍
-    \item U+1F41B Bug                 🐛
-    \item U+1FAB3 Cockroach           🪳
-    \item U+1F534 large red circle    🔴
-    \item U+1F535 large blue circle   🔵
-    \item U+1F7E0 large orange circle 🟠
-    \item U+1F7E1 large yellow circle 🟡
-    \item U+1F7E2 large green circle  🟢
-    \item U+1F7E3 large purple circle 🟣
-    \item U+1F7E4 large yellow circle 🟤
-    \item U+26AB  medium black circle ⚫
-    \item U+2B24  black large         %⬤
-    \item U+1F7E5 large red square    🟥
-    \item U+1F7E6 large blue square   🟦
-    \item U+1F7E7 large red square    🟧
-    \item U+1F7E8 large yellow square 🟨
-    \item U+1F7E9 large yellow square 🟩
-    \item U+1F7EA large purple square 🟪
-    \item U+1F7EB large braun square  🟫
-    \item U+2B1B  black large square  ⬛
-    \item U+1F4E6 Package             📦
-    \item U+1F4C1 File Folder         📁
-    \item U+1F4C2 Open File Folder    📂
-    \item U+1FAA3 Bucket              ️🪣
-    \item U+1F5D1 Wastebasket         🗑
-    \item U+2699  Gear                ⚙
-    \item U+26D4  No entry            ⛔
-    \item U+274C  Cross Mark          ❌
-    \item U+1F6AB No entry sign       🚫
-    \item U+1F6C7 Prohibited          %🛇
-    \item U+26A0  Warning             ⚠
-    \item U+1F6A7 Construction sign   🚧
-    \item U+2705  White heavy check   ✅
-    \item U+1F525 Fire                🔥
-\end{itemize}
+\include{Paragraphs}
+\include{Headlines}
+\include{Math}
+\include{Symbols}
+\include{Icons}
+\include{Compare}
 
+
+% Bibliography or Index would go here
+\backmatter
+%  \makeglossary
+%  \makeindex
 \end{document}
