@@ -3,12 +3,12 @@
 \section{Font Style Comparison}
 
 \newcommand{\foxtest}[1]{%
-  #1 Normal: The quick brown fox jumps over the lazy dog. \\
-  #1 \textit{Italic: The quick brown fox jumps over the lazy dog.} \\
-  #1 \textbf{Bold: The quick brown fox jumps over the lazy dog.} \\
-  #1 \textbf{\textit{Bold Italic: The quick brown fox jumps over the lazy dog.}} \\
-  #1 \textsc{Small Caps: The quick brown fox jumps over the lazy dog.} \\
-  #1 \textsl{Slanted: The quick brown fox jumps over the lazy dog.} \medskip
+  {#1 Normal: The quick brown fox jumps over the lazy dog.} \\
+  {#1 \textsl{Slanted: The quick brown fox jumps over the lazy dog.}} \\
+  {#1 \textit{Italic: The quick brown fox jumps over the lazy dog.}} \\
+  {#1 \textbf{Bold: The quick brown fox jumps over the lazy dog.}} \\
+  {#1 \textbf{\textit{Bold Italic: The quick brown fox jumps over the lazy dog.}}} \\
+  {#1 \textsc{Small Caps: The quick brown fox jumps over the lazy dog.}}\par
 }
 
 \subsection{Serif (Main)}
@@ -22,9 +22,25 @@
 
 
 
+\section{Embedded text of different style}
+
+\textit{Lorem ipsum} dolor sit amet, \textit{consetetur} sadipscing elitr, sed diam nonumy eirmod.\\
+\textbf{Lorem ipsum} dolor sit amet, \textbf{consetetur} sadipscing elitr, sed diam nonumy eirmod.\\
+\textsc{Lorem ipsum} dolor sit amet, \textsc{consetetur} sadipscing elitr, sed diam nonumy eirmod.\\
+\texttt{Lorem ipsum} dolor sit amet, \texttt{consetetur} sadipscing elitr, sed diam nonumy eirmod.\par
+
+
+
 \section{Characters in same font style}
 
 \subsection{Zero vs. O}
 
-\ttfamily oO0Oo0oO
-\rmfamily
+This tests lowercase O vs.\ uppercase O vs.\ zero.\par
+
+\newcommand{\zerotest}[1]{%
+  {#1 oO0Oo0oO}
+}
+
+Serif: \zerotest{\rmfamily}\\
+Sans Serif: \zerotest{\sffamily}\\
+Teletype: \zerotest{\ttfamily}\par

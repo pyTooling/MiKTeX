@@ -2,16 +2,56 @@
 % !TeX program = lualatex
 
 \documentclass[a4paper,10pt]{scrbook}
+\usepackage{pdftexcmds}  % Provides \pdf@strcmp in LuaLaTeX
 
 \usepackage{fontspec}
-\usepackage{amsmath,amssymb,amstext}
+\usepackage{amsmath,amstext}  % amsmath loads amssymb
 \usepackage{unicode-math}
 
-% Set the Text Fonts (Libertinus)
-\setmainfont{Libertinus Serif}
-\setsansfont{Libertinus Sans}
-\setmonofont{Libertinus Mono}
-\setmathfont{Libertinus Math}
+\ifdefined\FontFamilySelection
+  % Already defined via latexmk --pretex
+\else
+  \newcommand{\FontFamilySelection}{modern}
+  \ClassWarning{MyDocument}{%
+    No \protect\FontFamilySelection\space defined externally.\MessageBreak
+    Falling back to default: 'modern' for font Latin Modern%
+  }
+\fi
+
+\makeatletter
+\ifnum\pdf@strcmp{\FontFamilySelection}{libertinus}=0
+  % Set the fonts to Libertinus
+  \setmainfont{Libertinus Serif}
+  \setsansfont{Libertinus Sans}
+  \setmonofont{Libertinus Mono}
+  \setmathfont{Libertinus Math}
+\else
+  \ifnum\pdf@strcmp{\FontFamilySelection}{noto}=0
+    % Set fonts to Noto
+    \setmainfont{Noto Serif}
+    \setsansfont{Noto Sans}
+    \setmonofont{Noto Sans Mono}
+    \setmathfont{Noto Sans Math}
+  \else
+    \ifnum\pdf@strcmp{\FontFamilySelection}{dejavu}=0
+      % Set fonts to DejaVu
+      \setmainfont{DejaVu Serif}
+      \setsansfont{DejaVu Sans}
+      \setmonofont{DejaVu Sans Mono}      %[Scale=MatchLowercase]
+      \setmathfont{DejaVu Math TeX Gyre}  %DejaVuMathTeXGyre-Regular
+    \else
+      % Set the fonts to Latin Modern (LaTeX font derived from Computer Modern)
+      \setmainfont{Latin Modern Roman}
+      \setsansfont{Latin Modern Sans}
+      \setmonofont{Latin Modern Mono}
+      \setmathfont{Latin Modern Math}
+    \fi
+  \fi
+\fi
+\makeatother
+
+\usepackage{xcolor}
+\usepackage{graphicx}
 
 % Set Symbol font
 \usepackage{newunicodechar}
@@ -20,11 +60,27 @@
 
 \usepackage[english]{babel}
 \usepackage{blindtext}
+\usepackage{multicol}
+
+% Load hyperref as last package
+\usepackage{hyperref}
+\definecolor{darkblue}{rgb}{0.0, 0.0, 0.55}
+\definecolor{darkmaroon}{rgb}{0.5, 0.0, 0.0}
 
 
-\title{MiKTeX+LuaLaTeX+Unicode+OTF Test Document}
+% Configure document
+\title{LuaLaTeX+Unicode+OTF Test Document for \FontFamilySelection}
 \author{The pyTooling Authors}
 \date{\today}
+\hypersetup{
+    pdftitle={Test Document for \FontFamilySelection},
+    pdfborder={0 0 0},     % Ensures no boxes are drawn
+    colorlinks=true,
+    linkcolor=darkblue,    % Internal links (ToC, sections)
+    citecolor=darkmaroon,  % Citations
+    urlcolor=darkblue,     % URLs
+%    filecolor=teal,       % External files
+}
 
 \begin{document}
 \frontmatter
@@ -32,33 +88,12 @@
   \tableofcontents
 
 \mainmatter
-\chapter{Normal Text}
-\section{Serif Font - Main Font}
 
-\par\rmfamily\blindtext
-
-\section{Sans Serif Font - Headline Font}
-
-\par\sffamily\blindtext
-
-\section{Type Writer Font - Source Code}
-
-\par\ttfamily\blindtext
-
-\rmfamily Lorem
-\sffamily Lorem
-\ttfamily Lorem
-
-\par\textit{\rmfamily Lorem} $Lorem$
-\par\textit{\sffamily Lorem} $Lorem$
-
-
-
-
-a{\emojifont \Uchar"1F600 📦 👋🏻👋🏾}b
+%a{\emojifont \Uchar"1F600 📦 👋🏻👋🏾}b
 
 \include{Paragraphs}
 \include{Headlines}
+\include{Enumerations}
 \include{Math}
 \include{Symbols}
 \include{Icons}

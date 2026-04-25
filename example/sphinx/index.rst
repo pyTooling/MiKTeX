@@ -146,6 +146,9 @@ The accompanying documentation is licensed under :doc:`Creative Commons - Attrib
    :caption: Details
    :hidden:
 
+   Paragraphs
+   Headlines
+   Enumeration
    Symbols
    Icons
 

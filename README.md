@@ -10,16 +10,16 @@ Docker Hub: https://hub.docker.com/r/pytooling/miktex
 | `pytooling/miktex:release` | `main`            | Created from commits on `main` brnach.        |
 | `pytooling/miktex:dev`     | `dev`             | Created from commits on `dev` brnach.         |
 
-| Docker Hub Image          | GitHub Branch/Tag | Comment                                                                         |
-|---------------------------|-------------------|---------------------------------------------------------------------------------|
-| tbd; see #12              |                   | Created specificly for processing [Doxygen](https://www.doxygen.nl/) ouputs.    |
-| tbd; see #11              |                   | Created specificly for processing [Pandoc](https://pandoc.org/) ouputs.         |
-| `pytooling/miktex:sphinx` |                   | Created specificly for processing [Sphinx](https://www.sphinx-doc.org/) ouputs. |
+| Docker Hub Image                                              | Comment                                                                         |
+|---------------------------------------------------------------|---------------------------------------------------------------------------------|
+| tbd; see [#12](https://github.com/pyTooling/MiKTeX/issues/12) | Created specificly for processing [Doxygen](https://www.doxygen.nl/) ouputs.    |
+| tbd; see [#11](https://github.com/pyTooling/MiKTeX/issues/11) | Created specificly for processing [Pandoc](https://pandoc.org/) ouputs.         |
+| `pytooling/miktex:sphinx`                                     | Created specificly for processing [Sphinx](https://www.sphinx-doc.org/) ouputs. |
 
 
 ## Why another MikTeX Docker Image?
 
-* [MikTeX original containers](https://hub.docker.com/r/miktex/miktex) do not provide installations based on Ubuntu LTS.
+* [MikTeX original containers](https://hub.docker.com/r/miktex/miktex) do not provide installations based on Debian.
 * MikTeX original containers are infrequently updated (>1 year).
 * MikTeX original containers aren't smaller (less download time).
 * Prepare MiKTeX with Unicode support ([`pyTooling.sty`](pyTooling.sty)).
@@ -36,7 +36,7 @@ docker image run --rm -it -v $(pwd):/latex pytooling/miktex:latest
 ### GitHub Action Pipeline
 ```yml
   MiKTeX:
-    name: ⚓ Check MiKTeX installation
+    name: 📓 Translate to PDF
     runs-on: 'ubuntu-24.04'
     container:
       image: pytooling/miktex:latest
@@ -44,13 +44,18 @@ docker image run --rm -it -v $(pwd):/latex pytooling/miktex:latest
       - name: ⏬ Checkout repository
         uses: actions/checkout@v6
 
-      - name: ⚙️ Compile 'latex/document.tex'
+      - name: 📓 Compile 'latex/document.tex'
         run: |
           set -o pipefail
           
           cd ./latex
           chown -R latex:latex .
-          sudo -u latex latexmk --lualatex --interaction=nonstopmode --file-line-error --halt-on-error document.tex | filter.latexmk.sh
+          sudo -u latex latexmk \
+            --lualatex \
+            --interaction=nonstopmode \
+            --file-line-error \
+            --halt-on-error \
+            document.tex | filter.latexmk.sh
           
           ls -lAh *.pdf
 
@@ -92,11 +97,11 @@ Installed additional tools are:
 
 ### Doxygen
 
-**planned**, see #12
+**planned**, see [#12](https://github.com/pyTooling/MiKTeX/issues/12)
 
 ### Pandoc
 
-**planned**, see #11
+**planned**, see [#11](https://github.com/pyTooling/MiKTeX/issues/11)
 
 ### Sphinx
 
