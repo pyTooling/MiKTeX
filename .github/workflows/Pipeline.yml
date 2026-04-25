@@ -27,6 +27,8 @@ jobs:
   MiKTeX:
     name: 🐋 Build MiKTeX base-image
     runs-on: 'ubuntu-24.04'
+    needs:
+      - Prepare
 
     outputs:
       base_image_os_version:    ${{ steps.variables.outputs.base_image_os_version }}
@@ -37,6 +39,7 @@ jobs:
       miktex_image_name:        ${{ steps.variables.outputs.miktex_image_name }}
       miktex_image_tag:         ${{ steps.variables.outputs.miktex_image_tag }}
       miktex_image:             ${{ steps.variables.outputs.miktex_image }}
+      specific_tag_extension:   ${{ steps.variables.outputs.specific_tag_extension }}
       miktex_version:           ${{ steps.test.outputs.miktex_version }}
 
     steps:
@@ -50,9 +53,18 @@ jobs:
           base_image_py_version="3.14"
 
           miktex_source_repository="${base_image_os_codename,,}"
-
+    
           image_name="miktex"
-          image_tag="latest"
+          if [[ "${{ needs.Prepare.outputs.is_release_tag}}" == "true" ]]; then
+            image_tag="latest"
+            specific_tag_extension=""
+          elif [[ "${{ needs.Prepare.outputs.is_release_commit}}" == "true" ]]; then
+            image_tag="release"
+            specific_tag_extension="-release"
+          else
+            image_tag="dev"
+            specific_tag_extension="-dev"
+          fi
 
           tee "${GITHUB_OUTPUT}" <<EOF
           base_image_name=${base_image_name}
@@ -67,6 +79,8 @@ jobs:
           miktex_image_name=${image_name}
           miktex_image_tag=${image_tag}
           miktex_image=${{ vars.DOCKERHUB_NAMESPACE }}/${image_name}:${image_tag}
+          
+          specific_tag_extension=${specific_tag_extension}
           EOF
 
       - name: ⏬ Checkout repository
@@ -203,37 +217,48 @@ jobs:
       - name: ⏬ Checkout repository
         uses: actions/checkout@v6
 
-      - name: ⚙️ Compile 'example/document.tex'
+      - name: ⚙️ Compile 'example/lualatex/document.tex'
         run: |
           set -o pipefail
           
-          chown -R latex:latex .
-
           cd ./example/lualatex
+          chown -R latex:latex .
           sudo -u latex latexmk --lualatex --interaction=nonstopmode --file-line-error --halt-on-error document.tex | filter.latexmk.sh
           
           ls -lAh *.pdf
+
+      - name: 📤 Upload 'document-pdf' artifact
+        uses: pyTooling/upload-artifact@v7
+        with:
+          name: document-pdf
+          working-directory: example/lualatex
+          path: document.pdf
+          if-no-files-found: error
+#          retention-days: 1
 
   Specific:
     name: ${{ matrix.icon }} Build specific MiKTeX image for ${{ matrix.name }}
     runs-on: 'ubuntu-24.04'
     needs:
+      - Prepare
       - MiKTeX
     strategy:
       fail-fast: false
       matrix:
         include:
-          - {'icon': '🐋📓', 'name': 'Sphinx', 'image': 'sphinx'}
+          - {'icon': '🐋📓', 'name': 'Sphinx'}
 
     steps:
       - name: 🖊️ Variables
         id: variables
         run: |
+          image_tag="${{ matrix.name }}${{ needs.MiKTeX.outputs.specific_tag_extension }}"
+          
           tee "${GITHUB_OUTPUT}" <<EOF
           specific_image_ns="${{ needs.MiKTeX.outputs.miktex_image_ns }}"
           specific_image_name="${{ needs.MiKTeX.outputs.miktex_image_name }}"
-          specific_image_tag="${{ matrix.name }}"
-          specific_image=${{ needs.MiKTeX.outputs.miktex_image_ns }}/${{ needs.MiKTeX.outputs.miktex_image_name }}:${{ matrix.image }}
+          specific_image_tag="${image_tag,,}"
+          specific_image="${{ needs.MiKTeX.outputs.miktex_image_ns }}/${{ needs.MiKTeX.outputs.miktex_image_name }}:${image_tag,,}"
           EOF
 
       - name: ⏬ Checkout repository
@@ -317,18 +342,74 @@ jobs:
           printf -- "Docker image '%s' has %s\n" "${{ steps.variables.outputs.specific_image }}" "$(DockerImageSizeUncompressed ${{ steps.variables.outputs.specific_image }})"
           docker image push ${{ steps.variables.outputs.specific_image }}
 
+  Sphinx:
+    name: 📓 Build Sphinx documentation
+    runs-on: 'ubuntu-24.04'
+
+    steps:
+      - name: ⏬ Checkout repository
+        uses: actions/checkout@v6
+
+      - name: 🐍 Setup Python 3.14
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
+
+      - name: 🔧 [build] Install dependencies for Sphinx
+        run: python -m pip install --disable-pip-version-check -r example/sphinx/requirements.txt
+
+      - name: Translate to LaTeX
+        run: |
+          cd example/sphinx
+          sphinx-build -v -n -b latex -d _build/doctrees -j $(nproc) -w _build/latex.log . _build/latex
+
+      - name: 📤 Upload 'sphinx-latex' artifact
+        uses: pyTooling/upload-artifact@v7
+        with:
+          name: sphinx-latex
+          working-directory: example/sphinx/_build
+          path: latex
+          if-no-files-found: error
+          retention-days: 1
+
   SanityCheck-Sphinx:
     name: 🛟 Check MiKTeX for Sphinx installation
     runs-on: 'ubuntu-24.04'
     needs:
       - MiKTeX
       - Specific
+      - Sphinx
     container:
-      image: ${{ needs.MiKTeX.outputs.miktex_image_ns }}/${{ needs.MiKTeX.outputs.miktex_image_name }}:sphinx
+      image: ${{ needs.MiKTeX.outputs.miktex_image_ns }}/${{ needs.MiKTeX.outputs.miktex_image_name }}:sphinx${{ needs.MiKTeX.outputs.specific_tag_extension }}
     steps:
       - name: 🧜‍♀️ Check Mermaid
         run: |
           sudo -u latex mmdc --version
+
+      - name: 📥 Download artifacts 'sphinx-latex' from 'Sphinx' job
+        uses: pyTooling/download-artifact@v8
+        with:
+          name: sphinx-latex
+
+      - name: ⚙️ Compile 'latex/MiKTeX.tex'
+        run: |
+          set -o pipefail
+          
+          chown -R latex:latex .
+
+          cd ./latex
+          sudo -u latex latexmk --lualatex --interaction=nonstopmode --file-line-error --halt-on-error MiKTeX.tex | filter.latexmk.sh
+          
+          ls -lAh *.pdf
+
+      - name: 📤 Upload 'document' artifact
+        uses: pyTooling/upload-artifact@v7
+        with:
+          name: sphinx-pdf
+          working-directory: latex
+          path: MiKTeX.pdf
+          if-no-files-found: error
+#          retention-days: 1
 
   TriggerTaggedRelease:
     uses: pyTooling/Actions/.github/workflows/TagReleaseCommit.yml@r7

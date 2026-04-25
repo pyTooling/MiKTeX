@@ -1,0 +1,30 @@
+\chapter{Comparions}
+
+\section{Font Style Comparison}
+
+\newcommand{\foxtest}[1]{%
+  #1 Normal: The quick brown fox jumps over the lazy dog. \\
+  #1 \textit{Italic: The quick brown fox jumps over the lazy dog.} \\
+  #1 \textbf{Bold: The quick brown fox jumps over the lazy dog.} \\
+  #1 \textbf{\textit{Bold Italic: The quick brown fox jumps over the lazy dog.}} \\
+  #1 \textsc{Small Caps: The quick brown fox jumps over the lazy dog.} \\
+  #1 \textsl{Slanted: The quick brown fox jumps over the lazy dog.} \medskip
+}
+
+\subsection{Serif (Main)}
+\foxtest{\rmfamily}
+
+\subsection{Sans Serif}
+\foxtest{\sffamily}
+
+\subsection{Typewriter (Mono)}
+\foxtest{\ttfamily}
+
+
+
+\section{Characters in same font style}
+
+\subsection{Zero vs. O}
+
+\ttfamily oO0Oo0oO
+\rmfamily

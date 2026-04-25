@@ -1,25 +1,48 @@
 % !TeX encoding = UTF-8
 % !TeX program = lualatex
 
-\documentclass{scrarticle}
+\documentclass[a4paper,10pt]{scrbook}
 
-\usepackage{libertinus-otf}
-
+\usepackage{fontspec}
+\usepackage{amsmath,amssymb,amstext}
 \usepackage{unicode-math}
-\setmathfont{LibertinusMath}
 
+% Set the Text Fonts (Libertinus)
+\setmainfont{Libertinus Serif}
+\setsansfont{Libertinus Sans}
+\setmonofont{Libertinus Mono}
+\setmathfont{Libertinus Math}
+
+% Set Symbol font
+\usepackage{newunicodechar}
+\newfontfamily{\emojifont}[Renderer=OpenType]{NotoColorEmoji.ttf}
+\usepackage{pytooling}
+
+\usepackage[english]{babel}
 \usepackage{blindtext}
 
-\newfontfamily\emojifont[Renderer=OpenType]{NotoColorEmoji.ttf}
 
-\usepackage{newunicodechar}
-\newunicodechar{📦}{{\emojifont 📦}}
-
+\title{MiKTeX+LuaLaTeX+Unicode+OTF Test Document}
+\author{The pyTooling Authors}
+\date{\today}
 
 \begin{document}
+\frontmatter
+  \maketitle
+  \tableofcontents
+
+\mainmatter
+\chapter{Normal Text}
+\section{Serif Font - Main Font}
 
 \par\rmfamily\blindtext
+
+\section{Sans Serif Font - Headline Font}
+
 \par\sffamily\blindtext
+
+\section{Type Writer Font - Source Code}
+
 \par\ttfamily\blindtext
 
 \rmfamily Lorem
@@ -29,13 +52,21 @@
 \par\textit{\rmfamily Lorem} $Lorem$
 \par\textit{\sffamily Lorem} $Lorem$
 
-\ttfamily 0O
 
-\rmfamily
-$$aM \le \sum \Bigg( a\cdot b \Bigg)$$
 
-$$aM \le \sum \left( \frac12 \frac{a}{b} \right)$$
 
 a{\emojifont \Uchar"1F600 📦 👋🏻👋🏾}b
 
+\include{Paragraphs}
+\include{Headlines}
+\include{Math}
+\include{Symbols}
+\include{Icons}
+\include{Compare}
+
+
+% Bibliography or Index would go here
+\backmatter
+%  \makeglossary
+%  \makeindex
 \end{document}

@@ -4,25 +4,17 @@ This repository is based on [Debian 12.x Bookworm (slim) with Python 3.14](https
 
 Docker Hub: https://hub.docker.com/r/pytooling/miktex
 
-## Usage
+| Docker Hub Image           | GitHub Branch/Tag | Comment                                       |
+|----------------------------|-------------------|-----------------------------------------------|
+| `pytooling/miktex:latest`  | `vX.Y.Z`          | Created from tagged release on `main` brnach. |
+| `pytooling/miktex:release` | `main`            | Created from commits on `main` brnach.        |
+| `pytooling/miktex:dev`     | `dev`             | Created from commits on `dev` brnach.         |
 
-```bash
-docker image run --rm -v $(pwd):/latex pytooling/miktex:latest
-```
-
-## Installed Tools
-
-Installed additional tools are:
-
-* curl
-* GhostScript
-* make
-* MikTeX
-  * Preinstalled packages: [Common.list](Common.list) 
-* Perl
-* Python 3.14
-* sudo
-* tree
+| Docker Hub Image          | GitHub Branch/Tag | Comment                                                                         |
+|---------------------------|-------------------|---------------------------------------------------------------------------------|
+| tbd; see #12              |                   | Created specificly for processing [Doxygen](https://www.doxygen.nl/) ouputs.    |
+| tbd; see #11              |                   | Created specificly for processing [Pandoc](https://pandoc.org/) ouputs.         |
+| `pytooling/miktex:sphinx` |                   | Created specificly for processing [Sphinx](https://www.sphinx-doc.org/) ouputs. |
 
 
 ## Why another MikTeX Docker Image?
@@ -30,10 +22,81 @@ Installed additional tools are:
 * [MikTeX original containers](https://hub.docker.com/r/miktex/miktex) do not provide installations based on Ubuntu LTS.
 * MikTeX original containers are infrequently updated (>1 year).
 * MikTeX original containers aren't smaller (less download time).
+* Prepare MiKTeX with Unicode support ([`pyTooling.sty`](pyTooling.sty)).
 * pyTooling has control over preinstalled commonly used LaTeX packages (`amsfonts`/`amsmath`, `babel`, `hyperref`, `longtables`, ...)
-* pyTooling can derive specific images for e.g. [Sphinx](Sphinx.list).
+* pyTooling can derive specific images for e.g.Doxygen, Pandoc, [`Sphinx`](Sphinx.list), ...
 
-## Derived Variants
+## Usage
+
+### Standalone Docker Container
+```bash
+docker image run --rm -it -v $(pwd):/latex pytooling/miktex:latest
+```
+
+### GitHub Action Pipeline
+```yml
+  MiKTeX:
+    name: ⚓ Check MiKTeX installation
+    runs-on: 'ubuntu-24.04'
+    container:
+      image: pytooling/miktex:latest
+    steps:
+      - name: ⏬ Checkout repository
+        uses: actions/checkout@v6
+
+      - name: ⚙️ Compile 'latex/document.tex'
+        run: |
+          set -o pipefail
+          
+          cd ./latex
+          chown -R latex:latex .
+          sudo -u latex latexmk --lualatex --interaction=nonstopmode --file-line-error --halt-on-error document.tex | filter.latexmk.sh
+          
+          ls -lAh *.pdf
+
+      - name: 📤 Upload 'document-pdf' artifact
+        uses: pyTooling/upload-artifact@v7
+        with:
+          name: document-pdf
+          working-directory: latex
+          path: document.pdf
+          if-no-files-found: error
+          retention-days: 1
+```
+
+## MiKTeX Docker Image
+### Installed Tools
+
+Installed additional tools are:
+
+* curl
+* MikTeX
+  * Preinstalled packages: [Common.list](Common.list) 
+* Perl
+* Python 3.14
+* sudo
+* tree
+
+### Installed Fonts
+
+* Cabin
+* Latin Modern (LM)
+* Libertinus (optimized `Linux Libertine` for LuaLaTeX)
+* [URW Type Foundy](https://en.wikipedia.org/wiki/URW_Type_Foundry)
+  * URW Bookman (`ITC Bookman` clone)
+  * Nimbus Sans (`Helvetica` clone)
+  * Nimbus Roman (`Times New Roman` clone)
+  * ~~Palladio -> Palatino~~
+
+## Derived Variant Docker Images
+
+### Doxygen
+
+**planned**, see #12
+
+### Pandoc
+
+**planned**, see #11
 
 ### Sphinx
 
@@ -44,15 +107,6 @@ MiKTeX:
 Additional Debian Packages: [Sphinx.packages](Sphinx.packages)
 * nodejs: [Sphinx.npm](Sphinx.npm)
   * Mermaid
-
-
-### Doxygen
-
-**planned**
-
-### Pandoc
-
-**planned**
 
 
 ## License
