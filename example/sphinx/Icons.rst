@@ -37,6 +37,9 @@ Unicode Icons
 :U+2699  Gear:                ⚙
 :U+26D4  No entry:            ⛔
 :U+274C  Cross Mark:          ❌
+:U+2753  Black Question Mark Ornament:  ❓
+:U+2757  Heavy Exclamation Mark Symbol: ❗
+:U+2796  Heavy Minus Sign:              ➖
 :U+1F6AB No entry sign:       🚫
 :U+1F6C7 Prohibited:          ???
 :U+26A0  Warning:             ⚠
