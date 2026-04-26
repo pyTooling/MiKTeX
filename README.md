@@ -85,6 +85,7 @@ Installed additional tools are:
 ### Installed Fonts
 
 * Cabin
+* DejaVu
 * Latin Modern (LM)
 * Libertinus (optimized `Linux Libertine` for LuaLaTeX)
 * [URW Type Foundy](https://en.wikipedia.org/wiki/URW_Type_Foundry)
@@ -92,6 +93,7 @@ Installed additional tools are:
   * Nimbus Sans (`Helvetica` clone)
   * Nimbus Roman (`Times New Roman` clone)
   * ~~Palladio -> Palatino~~
+* Noto (No Tofu)
 
 ## Derived Variant Docker Images
 
