@@ -42,47 +42,43 @@
     \else
       % Set the fonts to Latin Modern (LaTeX font derived from Computer Modern)
       \setmainfont{Latin Modern Roman}[
-        SizeFeatures={     % Enable Optical/Design Sizes
-          {Size={-6},      Font=LM Roman 5},
-          {Size={6-7},     Font=LM Roman 6},
-          {Size={7-8},     Font=LM Roman 7},
-          {Size={8-9},     Font=LM Roman 8},
-          {Size={9-10},    Font=LM Roman 9},
-          {Size={10-12},   Font=LM Roman 10},
-          {Size={12-17},   Font=LM Roman 12},
-          {Size={17-},     Font=LM Roman 17},
+        % Design Sizes: Use the correct file for the current font size
+        SizeFeatures={
+          {Size={-6},     Font=LMRoman5-Regular},
+          {Size={6-7},    Font=LMRoman6-Regular},
+          {Size={7-8},    Font=LMRoman7-Regular},
+          {Size={8-9},    Font=LMRoman8-Regular},
+          {Size={9-10},   Font=LMRoman9-Regular},
+          {Size={10-12},  Font=LMRoman10-Regular},
+          {Size={12-17},  Font=LMRoman12-Regular},
+          {Size={17-},    Font=LMRoman17-Regular},
         },
-        % Map Small Caps & Slanted
+        % Specific Small Caps font
         SmallCapsFont={Latin Modern Roman Caps},
+        % Specific Slanted font (and its small caps)
         SlantedFont={Latin Modern Roman Slanted},
-        SlantedFeatures={SmallCapsFont={Latin Modern Roman Caps}}, % LMR Caps are slanted-compatible
-        ItalicFont={Latin Modern Roman},
-        ItalicFeatures={Style=Italic},
-        BoldFont={Latin Modern Roman},
-        BoldFeatures={Series=Bold}
+        SlantedFeatures={SmallCapsFont={LMRomanCaps10-Oblique}},
+        % Standard Italic/Bold
+        ItalicFont={LMRoman10-Italic},
+        BoldFont={LMRoman10-Bold},
+        BoldItalicFont={LMRoman10-BoldItalic}
       ]
       \setsansfont{Latin Modern Sans}[
-        SizeFeatures={     % Enable Optical/Design Sizes
-          {Size={-9},      Font=LM Sans 8},
-          {Size={9-10},    Font=LM Sans 9},
-          {Size={10-12},   Font=LM Sans 10},
-          {Size={12-17},   Font=LM Sans 12},
-          {Size={17-},     Font=LM Sans 17},
+        SizeFeatures={
+          {Size={-9},     Font=LMSans8-Regular},
+          {Size={9-10},   Font=LMSans9-Regular},
+          {Size={10-12},  Font=LMSans10-Regular},
+          {Size={12-17},  Font=LMSans12-Regular},
+          {Size={17-},    Font=LMSans17-Regular},
         },
-        ItalicFont={Latin Modern Sans},
-        ItalicFeatures={Style=Oblique}, % LM Sans uses Oblique instead of cursive Italic
-        BoldFont={Latin Modern Sans},
-        BoldFeatures={Series=Bold}
+        ItalicFont={LMSans10-Oblique}, % LM Sans uses Oblique as its Italic
+        BoldFont={LMSans10-Bold},
+        BoldItalicFont={LMSans10-BoldOblique}
       ]
       \setmonofont{Latin Modern Mono}[
-        SizeFeatures={     % Enable Optical/Design Sizes
-          {Size={-9},      Font=LM Mono 8},
-          {Size={9-10},    Font=LM Mono 9},
-          {Size={10-12},   Font=LM Mono 10},
-          {Size={12-},     Font=LM Mono 12},
-        },
         SmallCapsFont={Latin Modern Mono Caps},
-        SlantedFont={Latin Modern Mono Slanted}
+        SlantedFont={Latin Modern Mono Slanted},
+        % LM Mono also has a "Light" and "Condensed" version available if needed
       ]
       \setmathfont{Latin Modern Math}
     \fi
