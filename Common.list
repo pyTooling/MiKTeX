@@ -73,6 +73,7 @@ listliketab
 listings
 listofitems
 lm
+lm-math
 # longtable -> part of base installation
 ltxcmds
 makecell
@@ -81,6 +82,9 @@ mdwtools
 mptopdf
 # multicol -> part of base installation
 multirow
+noto
+noto-emoji
+notomath
 oberdiek
 parskip
 pdfescape

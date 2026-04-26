@@ -1,0 +1,63 @@
+\chapter{Enumerations}
+\section{Deep Homogeneous Nesting}
+
+% Gemini: Standard LaTeX classes usually support nesting up to 4 levels by default.
+%         To support 5 levels, we use the \texttt{enumitem} package or define additional nesting depths.
+
+\subsection{Ordered List (4 Levels)}
+\begin{enumerate}
+  \item Level 1
+    \begin{enumerate}
+      \item Level 2
+        \begin{enumerate}
+          \item Level 3
+            \begin{enumerate}
+              \item Level 4 - Deepest Entry
+            \end{enumerate}
+        \end{enumerate}
+    \end{enumerate}
+\end{enumerate}
+
+
+\subsection{Unordered List (4 Levels)}
+\begin{itemize}
+  \item Level 1
+    \begin{itemize}
+      \item Level 2
+        \begin{itemize}
+          \item Level 3
+            \begin{itemize}
+              \item Level 4 - Deepest Entry
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
+
+
+\section{Mixed Nesting Test}
+
+\begin{enumerate}
+  \item Top-level Ordered Item 1
+  \item Top-level Ordered Item 2
+    \begin{itemize}
+      \item Nested Unordered Item 2.1
+      \item Nested Unordered Item 2.2
+        \begin{itemize}
+          \item Deep Unordered Item 2.2.1
+          \item Deep Unordered Item 2.2.2
+        \end{itemize}
+      \item Nested Unordered Item 2.3
+    \end{itemize}
+  \item Top-level Ordered Item 3
+    \begin{enumerate}
+      \item Nested Ordered Item 3.1
+        \begin{itemize}
+          \item Deep Unordered Item 3.1.1
+          \item Deep Unordered Item 3.1.2
+        \end{itemize}
+      \item Nested Ordered Item 3.2
+    \end{enumerate}
+  \item Top-level Ordered Item 4
+  \item Top-level Ordered Item 5
+  \item Top-level Ordered Item 6
+\end{enumerate}

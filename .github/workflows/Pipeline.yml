@@ -210,27 +210,59 @@ jobs:
         run: |
           filter.latexmk.sh --help
 
-      - name: 📋 List installed fonts
+      - name: 📋 List installed fonts (System)
         run: |
-          sudo -u latex luaotfload-tool --list=*
+          printf -- "Installed system font families:\n"
+          fc-list : family | sort | sed 's/^/  /'
+          printf -- "Installed system fonts files:\n"
+          fc-list | sort | sed 's/^/  /'
 
+      - name: 📋 List installed fonts (LaTeX)
+        run: |
+          ( printf "Font Name\tVersion\tBuild Info\n"; \
+            sudo -u latex luaotfload-tool --list=* 2>/dev/null \
+            | grep -v "^luaotfload" | sort | sed 's/;/ \t/g' \
+          ) | awk -F'\t' '{ printf "%-50s %-20s %s %s %s\n", $1, $2, $3, $4, $5}'
+
+  Document:
+    name: 🐳${{ matrix.icon }} Example Document using ${{ matrix.font-family}}
+    runs-on: 'ubuntu-24.04'
+    needs:
+      - MiKTeX
+    container:
+      image: ${{ needs.MiKTeX.outputs.miktex_image }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {icon: '🔥', font-family: 'libertinus'}
+          - {icon: '📝', font-family: 'modern'    }
+          - {icon: '🪣', font-family: 'noto'      }
+          - {icon: '🚧', font-family: 'dejavu'    }
+    steps:
       - name: ⏬ Checkout repository
         uses: actions/checkout@v6
 
-      - name: ⚙️ Compile 'example/lualatex/document.tex'
+      - name: ⚙️ Compile 'example/lualatex/document.tex' with font '${{ matrix.font-family}}'
         run: |
           set -o pipefail
           
           cd ./example/lualatex
           chown -R latex:latex .
-          sudo -u latex latexmk --lualatex --interaction=nonstopmode --file-line-error --halt-on-error document.tex | filter.latexmk.sh
+          sudo -u latex latexmk \
+            --lualatex \
+            --usepretex='\newcommand{\FontFamilySelection}{${{ matrix.font-family}}}' \
+            --interaction=nonstopmode \
+            --file-line-error \
+            --halt-on-error \
+            document.tex | filter.latexmk.sh
           
           ls -lAh *.pdf
 
       - name: 📤 Upload 'document-pdf' artifact
         uses: pyTooling/upload-artifact@v7
         with:
-          name: document-pdf
+          name: document-pdf-${{ matrix.font-family}}
           working-directory: example/lualatex
           path: document.pdf
           if-no-files-found: error
@@ -355,7 +387,7 @@ jobs:
         with:
           python-version: "3.14"
 
-      - name: 🔧 [build] Install dependencies for Sphinx
+      - name: 🔧 Install dependencies for Sphinx
         run: python -m pip install --disable-pip-version-check -r example/sphinx/requirements.txt
 
       - name: Translate to LaTeX
@@ -416,6 +448,7 @@ jobs:
     needs:
       - Prepare
       - SanityCheck
+      - Document
       - SanityCheck-Sphinx
     if: needs.Prepare.outputs.is_release_commit == 'true' && github.event_name != 'schedule'
     permissions:
@@ -431,6 +464,7 @@ jobs:
     needs:
       - Prepare
       - SanityCheck
+      - Document
       - SanityCheck-Sphinx
     if: needs.Prepare.outputs.is_release_tag == 'true'
     permissions:
