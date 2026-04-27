@@ -16,6 +16,7 @@ Symbols
 :U+2197: ↗
 :U+2198: ↘
 :U+2199: ↙
+:U+279A Heavy North East Arrow: ➚
 :U+2921: ???
 :U+2292: ???
 :U+21A4: ???
