@@ -133,21 +133,7 @@ latex_elements = {
 	"polyglossia": "",
 	"babel":      r"\usepackage[english]{babel}",
 	"fontenc":    r"\usepackage{fontspec}",  # Disable the default T1 font encoding (Essential for LuaLaTeX)
-	"fontpkg":    dedent("""\
-		\\usepackage{unicode-math}
-
-		% Set the Text Fonts (Libertinus)
-		\\setmainfont{Libertinus Serif}
-		\\setsansfont{Libertinus Sans}
-		\\setmonofont{Libertinus Mono}
-		\\setmathfont{Libertinus Math}
-
-		% Set Symbol font
-		\\usepackage{newunicodechar}
-		\\newfontfamily{\\emojifont}[Renderer=OpenType, Scale=0.6]{NotoColorEmoji.ttf}
-		\\newcommand{\\emoji}[1]{{\\raisebox{0.1em}{\\emojifont{#1}\;}}}
-		\\usepackage{pytooling}
-	"""),
+	"fontpkg":    r"\usepackage[fontfamily=libertinus]{pytooling}",
 	"passoptionstopackages": dedent("""\
 		\\PassOptionsToPackage{verbatimvisiblespace=\\ }{sphinx}
 	"""),
@@ -155,6 +141,17 @@ latex_elements = {
 	"printindex": r"\def\twocolumn[#1]{#1}\printindex",
 }
 ```
+
+## `pytooling.sty`
+
+### Options
+
+| Option     | Default            | Description                                                                               | 
+|------------|--------------------|-------------------------------------------------------------------------------------------|
+| fontfamily | latinmodern        | Select a Unicode capable font family.<br>Supported: dejavu, latinmodern, libertinus, noto |
+| emojifont  | NotoColorEmoji.ttf | Select a Unicode icon/emoji font.                                                         |
+| emojiscale | 0.6                | Scaling of emojis to match text height.                                                   |
+| emojiraise | 0.1em              | Raise emojis to match normal texts baseline.                                              |
 
 
 ## License

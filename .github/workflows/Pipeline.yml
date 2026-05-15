@@ -235,10 +235,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - {icon: '🔥', font-family: 'libertinus'}
-          - {icon: '📝', font-family: 'modern'    }
-          - {icon: '🪣', font-family: 'noto'      }
-          - {icon: '🚧', font-family: 'dejavu'    }
+          - {icon: '🔥', font-family: 'libertinus' }
+          - {icon: '📝', font-family: 'latinmodern'}
+          - {icon: '🪣', font-family: 'noto'       }
+          - {icon: '🚧', font-family: 'dejavu'     }
     steps:
       - name: ⏬ Checkout repository
         uses: actions/checkout@v6

@@ -5,8 +5,6 @@
 \usepackage{pdftexcmds}  % Provides \pdf@strcmp in LuaLaTeX
 
 \usepackage{fontspec}
-\usepackage{amsmath,amstext}  % amsmath loads amssymb
-\usepackage{unicode-math}
 
 \ifdefined\FontFamilySelection
   % Already defined via latexmk --pretex
@@ -18,82 +16,10 @@
   }
 \fi
 
-\makeatletter
-\ifnum\pdf@strcmp{\FontFamilySelection}{libertinus}=0
-  % Set the fonts to Libertinus
-  \setmainfont{Libertinus Serif}
-  \setsansfont{Libertinus Sans}
-  \setmonofont{Libertinus Mono}
-  \setmathfont{Libertinus Math}
-\else
-  \ifnum\pdf@strcmp{\FontFamilySelection}{noto}=0
-    % Set fonts to Noto
-    \setmainfont{Noto Serif}
-    \setsansfont{Noto Sans}
-    \setmonofont{Noto Sans Mono}
-    \setmathfont{Noto Sans Math}
-  \else
-    \ifnum\pdf@strcmp{\FontFamilySelection}{dejavu}=0
-      % Set fonts to DejaVu
-      \setmainfont{DejaVu Serif}
-      \setsansfont{DejaVu Sans}
-      \setmonofont{DejaVu Sans Mono}      %[Scale=MatchLowercase]
-      \setmathfont{DejaVu Math TeX Gyre}  %DejaVuMathTeXGyre-Regular
-    \else
-      % Set the fonts to Latin Modern (LaTeX font derived from Computer Modern)
-      \setmainfont{Latin Modern Roman}[
-        % Design Sizes: Use the correct file for the current font size
-        SizeFeatures={
-          {Size={-6},     Font=LMRoman5-Regular},
-          {Size={6-7},    Font=LMRoman6-Regular},
-          {Size={7-8},    Font=LMRoman7-Regular},
-          {Size={8-9},    Font=LMRoman8-Regular},
-          {Size={9-10},   Font=LMRoman9-Regular},
-          {Size={10-12},  Font=LMRoman10-Regular},
-          {Size={12-17},  Font=LMRoman12-Regular},
-          {Size={17-},    Font=LMRoman17-Regular},
-        },
-        % Specific Small Caps font
-        SmallCapsFont={Latin Modern Roman Caps},
-        % Specific Slanted font (and its small caps)
-        SlantedFont={Latin Modern Roman Slanted},
-        SlantedFeatures={SmallCapsFont={LMRomanCaps10-Oblique}},
-        % Standard Italic/Bold
-        ItalicFont={LMRoman10-Italic},
-        BoldFont={LMRoman10-Bold},
-        BoldItalicFont={LMRoman10-BoldItalic}
-      ]
-      \setsansfont{Latin Modern Sans}[
-        SizeFeatures={
-          {Size={-9},     Font=LMSans8-Regular},
-          {Size={9-10},   Font=LMSans9-Regular},
-          {Size={10-12},  Font=LMSans10-Regular},
-          {Size={12-17},  Font=LMSans12-Regular},
-          {Size={17-},    Font=LMSans17-Regular},
-        },
-        ItalicFont={LMSans10-Oblique}, % LM Sans uses Oblique as its Italic
-        BoldFont={LMSans10-Bold},
-        BoldItalicFont={LMSans10-BoldOblique}
-      ]
-      \setmonofont{Latin Modern Mono}[
-        SmallCapsFont={Latin Modern Mono Caps},
-        SlantedFont={Latin Modern Mono Slanted},
-        % LM Mono also has a "Light" and "Condensed" version available if needed
-      ]
-      \setmathfont{Latin Modern Math}
-    \fi
-  \fi
-\fi
-\makeatother
+\usepackage[fontfamily=\FontFamilySelection]{pytooling}
 
 \usepackage{xcolor}
 \usepackage{graphicx}
-
-% Set Symbol font
-\usepackage{newunicodechar}
-\newfontfamily{\emojifont}[Renderer=OpenType]{NotoColorEmoji.ttf}
-\usepackage{pytooling}
-
 \usepackage[english]{babel}
 \usepackage{blindtext}
 \usepackage{multicol}

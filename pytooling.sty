@@ -1,14 +1,119 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{pytooling}[2000/00/00 pyTooling Unicode Definitions]
 
-% Check if LuaLaTeX is being used
-\ifdefined\directlua
-\else
+% ============================================================
+% Engine guard
+% ============================================================
+\ifdefined\directlua\else
   \PackageError{pytooling}{LuaLaTeX is required for this package}{%
-  This package uses unicode definitions and features specifically
-  designed for the LuaTeX engine. Please switch your compiler.}
+    This package uses unicode definitions and features specifically
+    designed for the LuaTeX engine. Please switch your compiler.}
 \fi
 
+% ============================================================
+% Package options (key-value via kvoptions)
+% ============================================================
+\RequirePackage{kvoptions}
+\SetupKeyvalOptions{family=pytooling, prefix=pytooling@}
+
+% Required:
+% \DeclareStringOption{fontfamily}        % dejavu, latinmodern, libertinus, noto
+% Optional: emoji configuration with defaults
+\DeclareStringOption[latinmodern]{fontfamily}        % dejavu, latinmodern, libertinus, noto
+\DeclareStringOption[NotoColorEmoji.ttf]{emojifont}
+\DeclareStringOption[0.6]{emojiscale}
+\DeclareStringOption[0.1em]{emojiraise}
+
+\ProcessKeyvalOptions{pytooling}
+
+% ============================================================
+% Validate required option
+% ============================================================
+%\ifx\pytooling@fontfamily\@empty
+%  \PackageError{pytooling}{Option 'fontfamily' is required}{%
+%    Specify the font family to use, e.g.\MessageBreak
+%    \string\usepackage[fontfamily=libertinus]{pytooling}.\MessageBreak
+%    Valid values: libertinus, latinmodern, noto.}
+%\fi
+
+% ============================================================
+% Font family setup
+% ============================================================
+\RequirePackage{amsmath,amstext}
+\RequirePackage{unicode-math}
+
+\def\pytooling@ff@libertinus{libertinus}
+\def\pytooling@ff@latinmodern{latinmodern}
+\def\pytooling@ff@noto{noto}
+\def\pytooling@ff@dejavu{dejavu}
+
+\ifx\pytooling@fontfamily\pytooling@ff@libertinus
+  \setmainfont{Libertinus Serif}
+  \setsansfont{Libertinus Sans}
+  \setmonofont{Libertinus Mono}
+  \setmathfont{Libertinus Math}
+\else\ifx\pytooling@fontfamily\pytooling@ff@latinmodern
+  \setmainfont{Latin Modern Roman}[
+    SizeFeatures={
+      {Size={-6},    Font=LMRoman5-Regular},
+      {Size={6-7},   Font=LMRoman6-Regular},
+      {Size={7-8},   Font=LMRoman7-Regular},
+      {Size={8-9},   Font=LMRoman8-Regular},
+      {Size={9-10},  Font=LMRoman9-Regular},
+      {Size={10-12}, Font=LMRoman10-Regular},
+      {Size={12-17}, Font=LMRoman12-Regular},
+      {Size={17-},   Font=LMRoman17-Regular},
+    },
+    SmallCapsFont={Latin Modern Roman Caps},
+    SlantedFont={Latin Modern Roman Slanted},
+    SlantedFeatures={SmallCapsFont={LMRomanCaps10-Oblique}},
+    ItalicFont={LMRoman10-Italic},
+    BoldFont={LMRoman10-Bold},
+    BoldItalicFont={LMRoman10-BoldItalic},
+  ]
+  \setsansfont{Latin Modern Sans}[
+    SizeFeatures={
+      {Size={-9},    Font=LMSans8-Regular},
+      {Size={9-10},  Font=LMSans9-Regular},
+      {Size={10-12}, Font=LMSans10-Regular},
+      {Size={12-17}, Font=LMSans12-Regular},
+      {Size={17-},   Font=LMSans17-Regular},
+    },
+    ItalicFont={LMSans10-Oblique},
+    BoldFont={LMSans10-Bold},
+    BoldItalicFont={LMSans10-BoldOblique},
+  ]
+  \setmonofont{Latin Modern Mono}[
+    SmallCapsFont={Latin Modern Mono Caps},
+    SlantedFont={Latin Modern Mono Slanted},
+  ]
+  \setmathfont{Latin Modern Math}
+\else\ifx\pytooling@fontfamily\pytooling@ff@noto
+  \setmainfont{Noto Serif}
+  \setsansfont{Noto Sans}
+  \setmonofont{Noto Sans Mono}
+  \setmathfont{Noto Sans Math}
+\else\ifx\pytooling@fontfamily\pytooling@ff@dejavu
+  \setmainfont{DejaVu Serif}
+  \setsansfont{DejaVu Sans}
+  \setmonofont{DejaVu Sans Mono}
+  \setmathfont{DejaVu Math TeX Gyre}
+\else
+  \PackageError{pytooling}{Unknown fontfamily '\pytooling@fontfamily'}{%
+    Valid values: libertinus, latinmodern, noto, dejavu.}
+\fi\fi\fi\fi
+
+
+% ============================================================
+% Emoji font setup
+% ============================================================
+\RequirePackage{newunicodechar}
+\newfontfamily{\emojifont}[Renderer=OpenType, Scale=\pytooling@emojiscale]{\pytooling@emojifont}
+\newcommand{\emoji}[1]{{\raisebox{\pytooling@emojiraise}{\emojifont{#1}\;}}}
+
+% ============================================================
+% Unicode character/symbol definitions
+% ============================================================
 \newunicodechar{≤}{\ensuremath{≤}}  % \le
 \newunicodechar{≥}{\ensuremath{≥}}  % \ge
 \newunicodechar{±}{\ensuremath{\pm}}
@@ -32,6 +137,10 @@
 %\newunicodechar{⭡}{\ensuremath{⭡}}             % Upwards Triangle-Headed Arrow U+2B61
 %\newunicodechar{⭢}{\ensuremath{⭢}}            % Rightwards Triangle-Headed Arrow U+2B62
 %\newunicodechar{⭣}{\ensuremath{⭣}}             % Downwards Triangle-Headed Arrow U+2B63
+
+% ============================================================
+% Unicode icon definitions
+% ============================================================
 \newunicodechar{🍎}{\emoji{🍎}}   % red apple            U+1F34E
 \newunicodechar{🍏}{\emoji{🍏}}   % green apple          U+1F34F
 \newunicodechar{🐧}{\emoji{🐧}}   % penguin              U+1F427
@@ -100,4 +209,7 @@
 \newunicodechar{⭐}{\emoji{⭐}}   % White medium star                  U+2B50
 \newunicodechar{⌛}{\emoji{⌛}}   % Hourglass                          U+231B
 
+% ============================================================
+% End of LaTeX package
+% ============================================================
 \endinput
