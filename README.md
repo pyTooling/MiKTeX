@@ -115,6 +115,47 @@ Additional Debian Packages: [Sphinx.packages](Sphinx.packages)
 * nodejs: [Sphinx.npm](Sphinx.npm)
   * Mermaid
 
+#### Sphinx configuration in `conf.py`
+
+The following configuration will activate LaTeX code specific for LuaLaTeX and Unicode support. It deactivates
+`polyglossia` and uses `babel` (has now better Unicode support).
+
+```py
+from textwrap import dedent
+
+latex_engine = "lualatex"
+latex_use_xindy = False
+latex_elements = {
+	"papersize":   "a4paper",      # The paper size ('letterpaper' or 'a4paper').
+	"pointsize":   "10pt",         # The font size ('10pt', '11pt' or '12pt').
+	"inputenc":    "",             # Let LuaLaTeX handle input encoding
+	"utf8extra":   "",
+	"polyglossia": "",
+	"babel":      r"\usepackage[english]{babel}",
+	"fontenc":    r"\usepackage{fontspec}",  # Disable the default T1 font encoding (Essential for LuaLaTeX)
+	"fontpkg":    dedent("""\
+		\\usepackage{unicode-math}
+
+		% Set the Text Fonts (Libertinus)
+		\\setmainfont{Libertinus Serif}
+		\\setsansfont{Libertinus Sans}
+		\\setmonofont{Libertinus Mono}
+		\\setmathfont{Libertinus Math}
+
+		% Set Symbol font
+		\\usepackage{newunicodechar}
+		\\newfontfamily{\\emojifont}[Renderer=OpenType, Scale=0.6]{NotoColorEmoji.ttf}
+		\\newcommand{\\emoji}[1]{{\\raisebox{0.1em}{\\emojifont{#1}\;}}}
+		\\usepackage{pytooling}
+	"""),
+	"passoptionstopackages": dedent("""\
+		\\PassOptionsToPackage{verbatimvisiblespace=\\ }{sphinx}
+	"""),
+	"makeindex":  r"\usepackage[columns=1]{idxlayout}\makeindex",
+	"printindex": r"\def\twocolumn[#1]{#1}\printindex",
+}
+```
+
 
 ## License
 
@@ -122,5 +163,4 @@ This Docker Image build receipt and all it's accompanying configuration and scri
 under [The MIT License](LICENSE.md) if not mentioned otherwise within the respective file.
 
 ---
-
 SPDX-License-Identifier: MIT
