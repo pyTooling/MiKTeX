@@ -117,18 +117,7 @@ latex_elements = {
 	"babel":      r"\usepackage[english]{babel}",
 	"fontenc":    r"\usepackage{fontspec}",  # Disable the default T1 font encoding (Essential for LuaLaTeX)
 	"fontpkg":    dedent("""\
-		\\usepackage{unicode-math}
-
-		% Set the Text Fonts (Libertinus)
-		\\setmainfont{Libertinus Serif}
-		\\setsansfont{Libertinus Sans}
-		\\setmonofont{Libertinus Mono}
-		\\setmathfont{Libertinus Math}
-
-		% Set Symbol font
-		\\usepackage{newunicodechar}
-		\\newfontfamily{\\emojifont}[Renderer=OpenType]{NotoColorEmoji.ttf}
-		\\usepackage{pytooling}
+		\\usepackage[fontfamily=libertinus]{pytooling}
 	"""),
 	"passoptionstopackages": dedent("""\
 		\\PassOptionsToPackage{verbatimvisiblespace=\\ }{sphinx}

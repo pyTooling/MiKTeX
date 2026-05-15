@@ -115,6 +115,44 @@ Additional Debian Packages: [Sphinx.packages](Sphinx.packages)
 * nodejs: [Sphinx.npm](Sphinx.npm)
   * Mermaid
 
+#### Sphinx configuration in `conf.py`
+
+The following configuration will activate LaTeX code specific for LuaLaTeX and Unicode support. It deactivates
+`polyglossia` and uses `babel` (has now better Unicode support).
+
+```py
+from textwrap import dedent
+
+latex_engine = "lualatex"
+latex_use_xindy = False
+latex_elements = {
+	"papersize":   "a4paper",      # The paper size ('letterpaper' or 'a4paper').
+	"pointsize":   "10pt",         # The font size ('10pt', '11pt' or '12pt').
+	"inputenc":    "",             # Let LuaLaTeX handle input encoding
+	"utf8extra":   "",
+	"polyglossia": "",
+	"babel":      r"\usepackage[english]{babel}",
+	"fontenc":    r"\usepackage{fontspec}",  # Disable the default T1 font encoding (Essential for LuaLaTeX)
+	"fontpkg":    r"\usepackage[fontfamily=libertinus]{pytooling}",
+	"passoptionstopackages": dedent("""\
+		\\PassOptionsToPackage{verbatimvisiblespace=\\ }{sphinx}
+	"""),
+	"makeindex":  r"\usepackage[columns=1]{idxlayout}\makeindex",
+	"printindex": r"\def\twocolumn[#1]{#1}\printindex",
+}
+```
+
+## `pytooling.sty`
+
+### Options
+
+| Option     | Default            | Description                                                                               | 
+|------------|--------------------|-------------------------------------------------------------------------------------------|
+| fontfamily | latinmodern        | Select a Unicode capable font family.<br>Supported: dejavu, latinmodern, libertinus, noto |
+| emojifont  | NotoColorEmoji.ttf | Select a Unicode icon/emoji font.                                                         |
+| emojiscale | 0.6                | Scaling of emojis to match text height.                                                   |
+| emojiraise | 0.1em              | Raise emojis to match normal texts baseline.                                              |
+
 
 ## License
 
@@ -122,5 +160,4 @@ This Docker Image build receipt and all it's accompanying configuration and scri
 under [The MIT License](LICENSE.md) if not mentioned otherwise within the respective file.
 
 ---
-
 SPDX-License-Identifier: MIT
