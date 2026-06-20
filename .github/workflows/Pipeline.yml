@@ -26,7 +26,7 @@ jobs:
 
   MiKTeX:
     name: 🐋 Build MiKTeX base-image
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'ubuntu-26.04'
     needs:
       - Prepare
 
@@ -84,7 +84,7 @@ jobs:
           EOF
 
       - name: ⏬ Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: 🐋 Building MiKTeX image
         id: build
@@ -189,7 +189,7 @@ jobs:
 
   SanityCheck:
     name: ⚓ Check MiKTeX installation
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'ubuntu-26.04'
     needs:
       - MiKTeX
     container:
@@ -226,7 +226,7 @@ jobs:
 
   Document:
     name: 🐳${{ matrix.icon }} Example Document using ${{ matrix.font-family}}
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'ubuntu-26.04'
     needs:
       - MiKTeX
     container:
@@ -241,7 +241,7 @@ jobs:
           - {icon: '🚧', font-family: 'dejavu'     }
     steps:
       - name: ⏬ Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: ⚙️ Compile 'example/lualatex/document.tex' with font '${{ matrix.font-family}}'
         run: |
@@ -270,7 +270,7 @@ jobs:
 
   Specific:
     name: ${{ matrix.icon }} Build specific MiKTeX image for ${{ matrix.name }}
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'ubuntu-26.04'
     needs:
       - Prepare
       - MiKTeX
@@ -294,7 +294,7 @@ jobs:
           EOF
 
       - name: ⏬ Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: 🐋 Building MiKTeX image for ${{ matrix.name }}
         id: build
@@ -376,11 +376,11 @@ jobs:
 
   Sphinx:
     name: 📓 Build Sphinx documentation
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'ubuntu-26.04'
 
     steps:
       - name: ⏬ Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: 🐍 Setup Python 3.14
         uses: actions/setup-python@v6
@@ -406,7 +406,7 @@ jobs:
 
   SanityCheck-Sphinx:
     name: 🛟 Check MiKTeX for Sphinx installation
-    runs-on: 'ubuntu-24.04'
+    runs-on: 'ubuntu-26.04'
     needs:
       - MiKTeX
       - Specific
