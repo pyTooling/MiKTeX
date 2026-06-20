@@ -42,7 +42,7 @@ docker image run --rm -it -v $(pwd):/latex pytooling/miktex:latest
       image: pytooling/miktex:latest
     steps:
       - name: ⏬ Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: 📓 Compile 'latex/document.tex'
         run: |

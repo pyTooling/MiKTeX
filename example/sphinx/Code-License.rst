@@ -1,4 +1,4 @@
-.. _SRCLICENSE:
+.. _CODELICENSE:
 
 .. raw:: latex
 
