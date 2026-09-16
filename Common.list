@@ -38,6 +38,7 @@ eurosym
 float
 fmtcount
 # fontenc -> part of base installation
+fontspec
 footmisc
 # footnote -> part of base installation
 fourier
@@ -76,12 +77,16 @@ lm
 lm-math
 # longtable -> part of base installation
 ltxcmds
+lualibs
+luaotfload
+luatex85
 makecell
 marvosym
 mdwtools
 mptopdf
 # multicol -> part of base installation
 multirow
+newunicodechar
 noto
 noto-emoji
 notomath
@@ -114,6 +119,7 @@ tcolorbox
 tocbibind
 todonotes
 translations
+unicode-math
 uniquecounter
 url
 # varioref -> part of base installation
