@@ -89,7 +89,6 @@ jobs:
       - name: 🐋 Building MiKTeX image
         id: build
         run: |
-          # Without this the status of 'docker buildx build | Docker.buildx.sh' is the filter's alone.
           set -o pipefail
 
           ANSI_RED=$'\x1b[31m'
@@ -302,7 +301,6 @@ jobs:
       - name: 🐋 Building MiKTeX image for ${{ matrix.name }}
         id: build
         run: |
-          # Without this the status of 'docker buildx build | Docker.buildx.sh' is the filter's alone.
           set -o pipefail
 
           ANSI_RED=$'\x1b[31m'
