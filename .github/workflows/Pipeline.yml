@@ -22,7 +22,7 @@ on:
 
 jobs:
   Prepare:
-    uses: pyTooling/Actions/.github/workflows/PrepareJob.yml@r7
+    uses: pyTooling/Actions/.github/workflows/PrepareJob.yml@r8
 
   MiKTeX:
     name: 🐋 Build MiKTeX base-image
@@ -444,7 +444,7 @@ jobs:
 #          retention-days: 1
 
   TriggerTaggedRelease:
-    uses: pyTooling/Actions/.github/workflows/TagReleaseCommit.yml@r7
+    uses: pyTooling/Actions/.github/workflows/TagReleaseCommit.yml@r8
     needs:
       - Prepare
       - SanityCheck
@@ -460,7 +460,7 @@ jobs:
     secrets: inherit
 
   ReleasePage:
-    uses: pyTooling/Actions/.github/workflows/PublishReleaseNotes.yml@r7
+    uses: pyTooling/Actions/.github/workflows/PublishReleaseNotes.yml@r8
     needs:
       - Prepare
       - SanityCheck
