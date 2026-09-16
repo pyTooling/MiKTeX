@@ -40,6 +40,9 @@ jobs:
       miktex_image_tag:         ${{ steps.variables.outputs.miktex_image_tag }}
       miktex_image:             ${{ steps.variables.outputs.miktex_image }}
       specific_tag_extension:   ${{ steps.variables.outputs.specific_tag_extension }}
+      short_sha:                ${{ steps.variables.outputs.short_sha }}
+      publish_official:         ${{ steps.variables.outputs.publish_official }}
+      miktex_official_tag:      ${{ steps.variables.outputs.miktex_official_tag }}
       miktex_version:           ${{ steps.test.outputs.miktex_version }}
 
     steps:
@@ -55,15 +58,26 @@ jobs:
           miktex_source_repository="${base_image_os_codename,,}"
     
           image_name="miktex"
+
+          # Built, pushed and tested as 'ci-<short sha>'; the 'Publish' job moves the official tags onto it.
+          short_sha="${GITHUB_SHA::7}"
+
           if [[ "${{ needs.Prepare.outputs.is_release_tag}}" == "true" ]]; then
-            image_tag="latest"
+            official_tag="latest"
             specific_tag_extension=""
+            publish_official="true"
           elif [[ "${{ needs.Prepare.outputs.is_release_commit}}" == "true" ]]; then
-            image_tag="release"
+            official_tag="release"
             specific_tag_extension="-release"
-          else
-            image_tag="dev"
+            publish_official="true"
+          elif [[ "${GITHUB_REF}" == "refs/heads/dev" ]]; then
+            official_tag="dev"
             specific_tag_extension="-dev"
+            publish_official="true"
+          else
+            official_tag=""
+            specific_tag_extension=""
+            publish_official="false"
           fi
 
           tee "${GITHUB_OUTPUT}" <<EOF
@@ -77,8 +91,12 @@ jobs:
           
           miktex_image_ns=${{ vars.DOCKERHUB_NAMESPACE }}
           miktex_image_name=${image_name}
-          miktex_image_tag=${image_tag}
-          miktex_image=${{ vars.DOCKERHUB_NAMESPACE }}/${image_name}:${image_tag}
+          miktex_image_tag=ci-${short_sha}
+          miktex_image=${{ vars.DOCKERHUB_NAMESPACE }}/${image_name}:ci-${short_sha}
+          
+          short_sha=${short_sha}
+          publish_official=${publish_official}
+          miktex_official_tag=${official_tag}
           
           specific_tag_extension=${specific_tag_extension}
           EOF
@@ -286,13 +304,16 @@ jobs:
       - name: 🖊️ Variables
         id: variables
         run: |
-          image_tag="${{ matrix.name }}${{ needs.MiKTeX.outputs.specific_tag_extension }}"
+          variant="${{ matrix.name }}"
+          variant="${variant,,}"
+          ci_tag="ci-${variant}-${{ needs.MiKTeX.outputs.short_sha }}"
           
           tee "${GITHUB_OUTPUT}" <<EOF
           specific_image_ns="${{ needs.MiKTeX.outputs.miktex_image_ns }}"
           specific_image_name="${{ needs.MiKTeX.outputs.miktex_image_name }}"
-          specific_image_tag="${image_tag,,}"
-          specific_image="${{ needs.MiKTeX.outputs.miktex_image_ns }}/${{ needs.MiKTeX.outputs.miktex_image_name }}:${image_tag,,}"
+          specific_image_tag="${ci_tag}"
+          specific_image="${{ needs.MiKTeX.outputs.miktex_image_ns }}/${{ needs.MiKTeX.outputs.miktex_image_name }}:${ci_tag}"
+          specific_official_tag="${variant}${{ needs.MiKTeX.outputs.specific_tag_extension }}"
           EOF
 
       - name: ⏬ Checkout repository
@@ -416,7 +437,7 @@ jobs:
       - Specific
       - Sphinx
     container:
-      image: ${{ needs.MiKTeX.outputs.miktex_image_ns }}/${{ needs.MiKTeX.outputs.miktex_image_name }}:sphinx${{ needs.MiKTeX.outputs.specific_tag_extension }}
+      image: ${{ needs.MiKTeX.outputs.miktex_image_ns }}/${{ needs.MiKTeX.outputs.miktex_image_name }}:ci-sphinx-${{ needs.MiKTeX.outputs.short_sha }}
     steps:
       - name: 🧜‍♀️ Check Mermaid
         run: |
@@ -447,6 +468,67 @@ jobs:
           if-no-files-found: error
 #          retention-days: 1
 
+  Publish:
+    name: 🚀 Promote the tested images to their official tags
+    runs-on: 'ubuntu-26.04'
+    needs:
+      - Prepare
+      - MiKTeX
+      - Specific
+      - SanityCheck
+      - Document
+      - SanityCheck-Sphinx
+    if: needs.MiKTeX.outputs.publish_official == 'true'
+
+    steps:
+      - name: 🚀 Promote 'ci-${{ needs.MiKTeX.outputs.short_sha }}' to '${{ needs.MiKTeX.outputs.miktex_official_tag }}'
+        run: |
+          set +e
+
+          ANSI_LIGHT_RED=$'\x1b[91m'
+          ANSI_LIGHT_GREEN=$'\x1b[92m'
+          ANSI_NOCOLOR=$'\x1b[0m'
+
+          printf -- "Login at Docker Hub ...\n"
+          printf "%s\n" "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ vars.DOCKERHUB_USERNAME }} --password-stdin
+
+          namespace="${{ needs.MiKTeX.outputs.miktex_image_ns }}"
+          name="${{ needs.MiKTeX.outputs.miktex_image_name }}"
+          shortSHA="${{ needs.MiKTeX.outputs.short_sha }}"
+          extension="${{ needs.MiKTeX.outputs.specific_tag_extension }}"
+
+          # The lower-cased 'name' of every entry of the 'Specific' matrix above.
+          variants=("sphinx")
+
+          errorCount=0
+
+          # 'imagetools create' copies the manifest inside the registry: no pull, and the digest is kept.
+          Promote() {
+            printf -- "  %-28s -> %-16s " "${1}" "${2}"
+            output="$(docker buildx imagetools create --tag "${namespace}/${name}:${2}" "${namespace}/${name}:${1}" 2>&1)"
+            if [[ $? -eq 0 ]]; then
+              printf -- "${ANSI_LIGHT_GREEN}[OK]${ANSI_NOCOLOR}\n"
+            else
+              printf -- "${ANSI_LIGHT_RED}[FAILED]${ANSI_NOCOLOR}\n"
+              printf -- "%s\n" "$(sed 's/^/    ↪ /g' <<< "${output}")"
+              printf -- "::error title=Publish::Promoting '%s' to '%s' failed.\n" "${1}" "${2}"
+              errorCount=$((errorCount + 1))
+            fi
+          }
+
+          printf -- "Promoting the images tested in this run:\n"
+          Promote "ci-${shortSHA}" "${{ needs.MiKTeX.outputs.miktex_official_tag }}"
+          for variant in "${variants[@]}"; do
+            Promote "ci-${variant}-${shortSHA}" "${variant}${extension}"
+          done
+
+          if [[ ${errorCount} -ne 0 ]]; then
+            printf -- "${ANSI_LIGHT_RED}%s image(s) couldn't be promoted.${ANSI_NOCOLOR}\n" "${errorCount}"
+            exit 1
+          fi
+
+          printf -- "${ANSI_LIGHT_GREEN}Every image was promoted.${ANSI_NOCOLOR}\n"
+
   TriggerTaggedRelease:
     uses: pyTooling/Actions/.github/workflows/TagReleaseCommit.yml@r7
     needs:
@@ -454,6 +536,7 @@ jobs:
       - SanityCheck
       - Document
       - SanityCheck-Sphinx
+      - Publish
     if: needs.Prepare.outputs.is_release_commit == 'true' && github.event_name != 'schedule'
     permissions:
       contents: write  # required for create tag
@@ -470,6 +553,7 @@ jobs:
       - SanityCheck
       - Document
       - SanityCheck-Sphinx
+      - Publish
     if: needs.Prepare.outputs.is_release_tag == 'true'
     permissions:
       contents: write
