@@ -124,6 +124,7 @@ while IFS=$'\n' read -r line; do
 		printf "%s\n" "${INDENT}${ANSI_GREEN}${line}${ANSI_NOCOLOR}"
 		group=0
 	elif [[ "${line}" =~ $Pattern_ERROR ]]; then
+		Counter_Error=$((Counter_Error + 1))
 		printf "%s\n" "${INDENT}${ANSI_LIGHT_RED}${line}${ANSI_NOCOLOR}"
 	elif [[ "${line}" =~ $Pattern_CANCELED ]]; then
 		printf "%s\n" "${INDENT}${ANSI_LIGHT_RED}${line}${ANSI_NOCOLOR}"
