@@ -5,17 +5,20 @@
 capt-of
 cmap
 # ec -> handled in Common.list
+ellipse
 # epstopdf-pkg -> handled in Common.list
 # etexcmds -> handled in Common.list
 fancyhdr
 fancyvrb
 fncychap
+fontawesome7
 framed
 # gettitlestring -> handled in Common.list
 # graphics-cfg -> handled in Common.list
 # graphics-def -> handled in Common.list
 gsftopk
 # hycolor -> handled in Common.list
+idxlayout
 # iftex -> handled in Common.list
 # infwarerr -> handled in Common.list
 # intcalc -> handled in Common.list
@@ -34,6 +37,8 @@ needspace
 # oberdiek -> handled in Common.list
 # pdfescape -> handled in Common.list
 # pdftexcmds -> handled in Common.list
+pict2e
+ragged2e
 # refcount -> handled in Common.list
 # rerunfilecheck -> handled in Common.list
 tabulary
