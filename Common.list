@@ -25,6 +25,7 @@ caption
 cleveref
 colortbl
 courier
+ctablestack
 datetime
 datetime2
 draftwatermark
@@ -51,6 +52,7 @@ graphics-def
 # graphicx -> part of base installation
 grfext
 hycolor
+hypcap
 hyperref
 iftex
 # ifthen -> part of base installation
@@ -77,9 +79,11 @@ lm
 lm-math
 # longtable -> part of base installation
 ltxcmds
+lualatex-math
 lualibs
 luaotfload
 luatex85
+luatexbase
 makecell
 marvosym
 mdwtools
@@ -109,6 +113,7 @@ setspace
 siunitx
 soul
 stackengine
+stringenc
 # subcaption -> part of base installation
 tabstackengine
 # tabularx -> part of base installation
