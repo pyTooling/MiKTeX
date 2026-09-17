@@ -50,8 +50,8 @@ jobs:
         id: variables
         run: |
           base_image_name="python"
-          base_image_os_version="12"
-          base_image_os_codename="Bookworm"
+          base_image_os_version="13"
+          base_image_os_codename="Trixie"
           base_image_os_size="-slim"
           base_image_py_version="3.14"
 

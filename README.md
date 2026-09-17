@@ -1,6 +1,6 @@
 # MikTeX Docker Image
 
-This repository is based on [Debian 12.x Bookworm (slim) with Python 3.14](https://hub.docker.com/_/python).
+This repository is based on [Debian 13.x Trixie (slim) with Python 3.14](https://hub.docker.com/_/python).
 
 Docker Hub: https://hub.docker.com/r/pytooling/miktex
 
