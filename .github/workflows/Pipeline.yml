@@ -50,8 +50,8 @@ jobs:
         id: variables
         run: |
           base_image_name="python"
-          base_image_os_version="12"
-          base_image_os_codename="Bookworm"
+          base_image_os_version="13"
+          base_image_os_codename="Trixie"
           base_image_os_size="-slim"
           base_image_py_version="3.14"
 
@@ -279,6 +279,17 @@ jobs:
           
           ls -lAh *.pdf
 
+      - name: 🗒️ MiKTeX log of the failed run
+        if: failure()
+        run: |
+          for logFile in /latex/.miktex/texmfs/data/miktex/log/*.log /var/log/miktex/*.log; do
+            if [[ -f "${logFile}" ]]; then
+              printf -- "::group::%s\n" "${logFile}"
+              cat -- "${logFile}"
+              printf -- "::endgroup::\n"
+            fi
+          done
+
       - name: 📤 Upload 'document-pdf' artifact
         uses: pyTooling/upload-artifact@v7
         with:
@@ -309,11 +320,11 @@ jobs:
           ci_tag="ci-${variant}-${{ needs.MiKTeX.outputs.short_sha }}"
           
           tee "${GITHUB_OUTPUT}" <<EOF
-          specific_image_ns="${{ needs.MiKTeX.outputs.miktex_image_ns }}"
-          specific_image_name="${{ needs.MiKTeX.outputs.miktex_image_name }}"
-          specific_image_tag="${ci_tag}"
-          specific_image="${{ needs.MiKTeX.outputs.miktex_image_ns }}/${{ needs.MiKTeX.outputs.miktex_image_name }}:${ci_tag}"
-          specific_official_tag="${variant}${{ needs.MiKTeX.outputs.specific_tag_extension }}"
+          specific_image_ns=${{ needs.MiKTeX.outputs.miktex_image_ns }}
+          specific_image_name=${{ needs.MiKTeX.outputs.miktex_image_name }}
+          specific_image_tag=${ci_tag}
+          specific_image=${{ needs.MiKTeX.outputs.miktex_image_ns }}/${{ needs.MiKTeX.outputs.miktex_image_name }}:${ci_tag}
+          specific_official_tag=${variant}${{ needs.MiKTeX.outputs.specific_tag_extension }}
           EOF
 
       - name: ⏬ Checkout repository
@@ -458,6 +469,17 @@ jobs:
           sudo -u latex latexmk --lualatex --interaction=nonstopmode --file-line-error --halt-on-error MiKTeX.tex | filter.latexmk.sh
           
           ls -lAh *.pdf
+
+      - name: 🗒️ MiKTeX log of the failed run
+        if: failure()
+        run: |
+          for logFile in /latex/.miktex/texmfs/data/miktex/log/*.log /var/log/miktex/*.log; do
+            if [[ -f "${logFile}" ]]; then
+              printf -- "::group::%s\n" "${logFile}"
+              cat -- "${logFile}"
+              printf -- "::endgroup::\n"
+            fi
+          done
 
       - name: 📤 Upload 'document' artifact
         uses: pyTooling/upload-artifact@v7

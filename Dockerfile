@@ -35,7 +35,7 @@ RUN ln -sf /bin/bash /bin/sh
 
 # Install MikTeX
 RUN curl -fsSL https://miktex.org/download/key | gpg --dearmor -o /usr/share/keyrings/miktex.gpg
-RUN echo "deb [signed-by=/usr/share/keyrings/miktex.gpg] https://miktex.org/download/debian bookworm universe" | tee /etc/apt/sources.list.d/miktex.list
+RUN echo "deb [signed-by=/usr/share/keyrings/miktex.gpg] https://miktex.org/download/debian ${MIKTEX_SRC_REPO} universe" | tee /etc/apt/sources.list.d/miktex.list
 # Install dependencies via apt-get
 RUN --mount=type=bind,target=/context \
     apt-get update \
