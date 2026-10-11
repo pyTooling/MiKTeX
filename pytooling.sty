@@ -52,6 +52,8 @@
   \setsansfont{Libertinus Sans}
   \setmonofont{Libertinus Mono}
   \setmathfont{Libertinus Math}
+  % Libertinus Math has no ✓ (U+2713), which unicode-math uses for \checkmark; Sphinx writes ✔ as \(\pmb{\checkmark}\).
+  \AtBeginDocument{\renewcommand{\checkmark}{\mbox{✔}}}
 \else\ifx\pytooling@fontfamily\pytooling@ff@latinmodern
   \setmainfont{Latin Modern Roman}[
     SizeFeatures={
