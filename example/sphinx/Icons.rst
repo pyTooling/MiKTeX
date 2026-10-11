@@ -32,6 +32,7 @@ Unicode Icons
 :U+1F4E6 Package:             📦
 :U+1F4C1 File Folder:         📁
 :U+1F4C2 Open File Folder:    📂
+:U+1F4C4 Page Facing Up:      📄
 :U+1FAA3 Bucket:              🪣
 :U+1F5D1 Wastebasket:         🗑
 :U+2699  Gear:                ⚙
@@ -67,6 +68,11 @@ Unicode Icons
 :U+1F517 Link Symbol:                        🔗
 :U+1F527 Wrench:                             🔧
 :U+1F528 Hammer:                             🔨
+:U+1F9E9 Jigsaw Puzzle Piece:                🧩
+:U+1F9EA Test Tube:                          🧪
+:U+1F3A8 Artist Palette:                     🎨
+:U+1F4D6 Open Book:                          📖
+:U+2728 Sparkles:                            ✨
 :U+1F5CE % Document:                          ???
 :U+2B50 White medium star:                   ⭐
 :U+231B Hourglass:                           ⌛
