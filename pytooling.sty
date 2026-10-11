@@ -52,6 +52,8 @@
   \setsansfont{Libertinus Sans}
   \setmonofont{Libertinus Mono}
   \setmathfont{Libertinus Math}
+  % Libertinus Math has no ✓ (U+2713), which unicode-math uses for \checkmark; Sphinx writes ✔ as \(\pmb{\checkmark}\).
+  \AtBeginDocument{\renewcommand{\checkmark}{\mbox{✔}}}
 \else\ifx\pytooling@fontfamily\pytooling@ff@latinmodern
   \setmainfont{Latin Modern Roman}[
     SizeFeatures={
@@ -170,6 +172,7 @@
 \newunicodechar{📦}{\emoji{📦}}   % Package              U+1F4E6
 \newunicodechar{📁}{\emoji{📁}}   % File Folder          U+1F4C1
 \newunicodechar{📂}{\emoji{📂}}   % Open File Folder     U+1F4C2
+\newunicodechar{📄}{\emoji{📄}}   % Page Facing Up       U+1F4C4
 \newunicodechar{🪣}{\emoji{🪣}}   % Bucket             ️  U+1FAA3
 \newunicodechar{🗑}{\emoji{🗑}}     % Wastebasket      🗑️  U+1F5D1
 \newunicodechar{⚙}{\emoji{⚙}}     % Gear             ⚙️  U+2699
@@ -205,9 +208,110 @@
 \newunicodechar{🔗}{\emoji{🔗}}   % Link Symbol                        U+1F517
 \newunicodechar{🔧}{\emoji{🔧}}   % Wrench                             U+1F527
 \newunicodechar{🔨}{\emoji{🔨}}   % Hammer                             U+1F528
+\newunicodechar{🧩}{\emoji{🧩}}   % Jigsaw Puzzle Piece                U+1F9E9
+\newunicodechar{🧪}{\emoji{🧪}}   % Test Tube                          U+1F9EA
+\newunicodechar{🎨}{\emoji{🎨}}   % Artist Palette                     U+1F3A8
+\newunicodechar{📖}{\emoji{📖}}   % Open Book                          U+1F4D6
+\newunicodechar{✨}{\emoji{✨}}   % Sparkles                           U+2728
 \newunicodechar{🗎}{\emoji{🗎}}     % Document                           U+1F5CE
 \newunicodechar{⭐}{\emoji{⭐}}   % White medium star                  U+2B50
 \newunicodechar{⌛}{\emoji{⌛}}   % Hourglass                          U+231B
+
+% Commit and pull-request types (gitmoji)
+\newunicodechar{🎉}{\emoji{🎉}}   % Party Popper                       U+1F389
+\newunicodechar{🚑}{\emoji{🚑}}   % Ambulance                          U+1F691
+\newunicodechar{🩹}{\emoji{🩹}}   % Adhesive Bandage                   U+1FA79
+\newunicodechar{♻}{\emoji{♻}}   % Black Universal Recycling Symbol   U+267B
+\newunicodechar{⚡}{\emoji{⚡}}   % High Voltage Sign                  U+26A1
+\newunicodechar{💄}{\emoji{💄}}   % Lipstick                           U+1F484
+\newunicodechar{🚀}{\emoji{🚀}}   % Rocket                             U+1F680
+\newunicodechar{🔖}{\emoji{🔖}}   % Bookmark                           U+1F516
+\newunicodechar{🏷}{\emoji{🏷}}   % Label                              U+1F3F7
+\newunicodechar{⬆}{\emoji{⬆}}   % Upwards Black Arrow                U+2B06
+\newunicodechar{⬇}{\emoji{⬇}}   % Downwards Black Arrow              U+2B07
+\newunicodechar{📌}{\emoji{📌}}   % Pushpin                            U+1F4CC
+\newunicodechar{➕}{\emoji{➕}}   % Heavy Plus Sign                    U+2795
+\newunicodechar{🔀}{\emoji{🔀}}   % Twisted Rightwards Arrows          U+1F500
+\newunicodechar{⏪}{\emoji{⏪}}   % Black Left-Pointing Double TriangleU+23EA
+\newunicodechar{🚚}{\emoji{🚚}}   % Delivery Truck                     U+1F69A
+\newunicodechar{💥}{\emoji{💥}}   % Collision Symbol                   U+1F4A5
+\newunicodechar{🔐}{\emoji{🔐}}   % Closed Lock With Key               U+1F510
+\newunicodechar{🌐}{\emoji{🌐}}   % Globe With Meridians               U+1F310
+\newunicodechar{🔊}{\emoji{🔊}}   % Speaker With Three Sound Waves     U+1F50A
+\newunicodechar{🔇}{\emoji{🔇}}   % Speaker With Cancellation Stroke   U+1F507
+\newunicodechar{🧹}{\emoji{🧹}}   % Broom                              U+1F9F9
+\newunicodechar{🚨}{\emoji{🚨}}   % Police Cars Revolving Light        U+1F6A8
+\newunicodechar{💚}{\emoji{💚}}   % Green Heart                        U+1F49A
+\newunicodechar{👷}{\emoji{👷}}   % Construction Worker                U+1F477
+\newunicodechar{🏗}{\emoji{🏗}}   % Building Construction              U+1F3D7
+\newunicodechar{🛠}{\emoji{🛠}}   % Hammer And Wrench                  U+1F6E0
+\newunicodechar{💡}{\emoji{💡}}   % Electric Light Bulb                U+1F4A1
+\newunicodechar{🎯}{\emoji{🎯}}   % Direct Hit                         U+1F3AF
+% Bots and AI
+\newunicodechar{🤖}{\emoji{🤖}}   % Robot Face                         U+1F916
+\newunicodechar{✍}{\emoji{✍}}   % Writing Hand                       U+270D
+\newunicodechar{🧠}{\emoji{🧠}}   % Brain                              U+1F9E0
+% Status and checklists
+\ifx\pytooling@fontfamily\pytooling@ff@libertinus\else       % part of Libertinus, but not of the other families
+  \newunicodechar{✔}{\emoji{✔}} % Heavy Check Mark                   U+2714
+\fi
+\newunicodechar{✖}{\emoji{✖}}   % Heavy Multiplication X             U+2716
+\newunicodechar{☑}{\emoji{☑}}   % Ballot Box With Check              U+2611
+\newunicodechar{❎}{\emoji{❎}}   % Negative Squared Cross Mark        U+274E
+\newunicodechar{⬜}{\emoji{⬜}}   % White Large Square                 U+2B1C
+\newunicodechar{🔲}{\emoji{🔲}}   % Black Square Button                U+1F532
+\newunicodechar{⚪}{\emoji{⚪}}   % Medium White Circle                U+26AA
+\newunicodechar{⏳}{\emoji{⏳}}   % Hourglass With Flowing Sand        U+23F3
+\newunicodechar{⏸}{\emoji{⏸}}   % Double Vertical Bar                U+23F8
+\ifx\pytooling@fontfamily\pytooling@ff@libertinus\else       % part of Libertinus, but not of the other families
+  \newunicodechar{▶}{\emoji{▶}} % Black Right-Pointing Triangle      U+25B6
+\fi
+\newunicodechar{⏹}{\emoji{⏹}}   % Black Square For Stop              U+23F9
+\newunicodechar{🔁}{\emoji{🔁}}   % Clockwise Rightwards And Leftwards Open Circle ArrowsU+1F501
+\newunicodechar{🔄}{\emoji{🔄}}   % Anticlockwise Downwards And Upwards Open Circle ArrowsU+1F504
+\newunicodechar{🕑}{\emoji{🕑}}   % Clock Face Two O'Clock             U+1F551
+\newunicodechar{⏱}{\emoji{⏱}}   % Stopwatch                          U+23F1
+% Notes and reviews
+\newunicodechar{💬}{\emoji{💬}}   % Speech Balloon                     U+1F4AC
+\newunicodechar{👍}{\emoji{👍}}   % Thumbs Up Sign                     U+1F44D
+\newunicodechar{👎}{\emoji{👎}}   % Thumbs Down Sign                   U+1F44E
+\newunicodechar{🙋}{\emoji{🙋}}   % Happy Person Raising One Hand      U+1F64B
+\newunicodechar{😉}{\emoji{😉}}   % Winking Face                       U+1F609
+\ifx\pytooling@fontfamily\pytooling@ff@libertinus\else       % part of Libertinus, but not of the other families
+  \newunicodechar{ℹ}{\emoji{ℹ}} % Information Source                 U+2139
+\fi
+\newunicodechar{📢}{\emoji{📢}}   % Public Address Loudspeaker         U+1F4E2
+\newunicodechar{📣}{\emoji{📣}}   % Cheering Megaphone                 U+1F4E3
+\newunicodechar{📎}{\emoji{📎}}   % Paperclip                          U+1F4CE
+\newunicodechar{🔎}{\emoji{🔎}}   % Right-Pointing Magnifying Glass    U+1F50E
+\newunicodechar{🧭}{\emoji{🧭}}   % Compass                            U+1F9ED
+\newunicodechar{📋}{\emoji{📋}}   % Clipboard                          U+1F4CB
+\newunicodechar{🗂}{\emoji{🗂}}   % Card Index Dividers                U+1F5C2
+\newunicodechar{📑}{\emoji{📑}}   % Bookmark Tabs                      U+1F4D1
+\newunicodechar{🗒}{\emoji{🗒}}   % Spiral Note Pad                    U+1F5D2
+\newunicodechar{✏}{\emoji{✏}}   % Pencil                             U+270F
+% Documents, data and tools
+\newunicodechar{📃}{\emoji{📃}}   % Page With Curl                     U+1F4C3
+\newunicodechar{📜}{\emoji{📜}}   % Scroll                             U+1F4DC
+\newunicodechar{📚}{\emoji{📚}}   % Books                              U+1F4DA
+\newunicodechar{🧮}{\emoji{🧮}}   % Abacus                             U+1F9EE
+\newunicodechar{🔢}{\emoji{🔢}}   % Input Symbol For Numbers           U+1F522
+\newunicodechar{🗃}{\emoji{🗃}}   % Card File Box                      U+1F5C3
+\newunicodechar{💾}{\emoji{💾}}   % Floppy Disk                        U+1F4BE
+\newunicodechar{🧰}{\emoji{🧰}}   % Toolbox                            U+1F9F0
+\newunicodechar{🔬}{\emoji{🔬}}   % Microscope                         U+1F52C
+\newunicodechar{🩺}{\emoji{🩺}}   % Stethoscope                        U+1FA7A
+\newunicodechar{🛒}{\emoji{🛒}}   % Shopping Trolley                   U+1F6D2
+\newunicodechar{🏭}{\emoji{🏭}}   % Factory                            U+1F3ED
+% Security and bugs
+\newunicodechar{🛡}{\emoji{🛡}}   % Shield                             U+1F6E1
+\newunicodechar{🐞}{\emoji{🐞}}   % Lady Beetle                        U+1F41E
+% Programming languages
+\newunicodechar{🦀}{\emoji{🦀}}   % Crab                               U+1F980
+\newunicodechar{☕}{\emoji{☕}}   % Hot Beverage                       U+2615
+\newunicodechar{🐘}{\emoji{🐘}}   % Elephant                           U+1F418
+\newunicodechar{🐹}{\emoji{🐹}}   % Hamster Face                       U+1F439
+\newunicodechar{💎}{\emoji{💎}}   % Gem Stone                          U+1F48E
 
 % ============================================================
 % End of LaTeX package
